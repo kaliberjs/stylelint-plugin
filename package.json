@@ -1,0 +1,14 @@
+{
+  "name": "@kaliber/stylelint-plugin",
+  "version": "0.0.0",
+  "devDependencies": {
+    "fs-extra": "^11.3.0",
+    "postcss-calc": "^7.0.4",
+    "postcss-modules-values": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-selector-parser": "^6.0.3",
+    "postcss-values-parser": "^4.0.0",
+    "stylelint": "^13.7.1",
+    "stylelint-use-nesting": "^3.0.0"
+  }
+}
