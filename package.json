@@ -1,6 +1,9 @@
 {
   "name": "@kaliber/stylelint-plugin",
   "version": "0.0.0",
+  "scripts": {
+    "test": "node --test **/test.js"
+  },
   "devDependencies": {
     "fs-extra": "^11.3.0",
     "postcss-calc": "^7.0.4",

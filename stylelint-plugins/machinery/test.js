@@ -1,5 +1,6 @@
 const assert = require('assert')
 const stylelint = require('stylelint')
+const { describe, it } = require('node:test')
 
 module.exports = { test }
 
