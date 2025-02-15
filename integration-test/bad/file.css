@@ -1,0 +1,87 @@
+@import './a.css';
+@import './a.css'; @NAMESPACE "";
+
+
+.test-nesting {
+  margin: 0px;
+  margin: 0px;;
+  z-index: 1! important;
+
+
+  padding-left: 0;padding: 0;
+  font-family: serif, serif;
+  transform:
+    Translate(1 ,1,
+
+     2
+  )scale(3);
+  background: linear-gradient( top,var(--color)/3, #000);
+  background-size: 0
+
+  , 0;
+  background-size: 0 ,0;
+
+  &::AFTER {position :absolute ;margin: 0}
+
+  @media( mon-WIDTH :600px)and(600px<=min-width),projection {padding: 0;
+  }
+
+  @media screen and (color)
+   ,projection and (color) ,projection {
+    color: red;
+  }
+
+  @test {}
+  /* */
+
+  /*abc */
+}
+.test-nesting:hover{
+  COLOR: #FFFFFF;
+
+}.test-policy .test-policy {
+  color: #FGF;}
+
+.test-nesting {
+  pad-ding: .0;
+}
+
+[ test = 2] {
+  padding: 1PX;
+
+  &>.test {
+    margin: 1ab;
+  }
+}
+
+.test1
+.test2:NOT( .test):before {
+  padding: 0;
+  content: '
+  ';
+}
+
+.testA , .testB:unknown { padding: 0; }
+
+.testX,
+
+.testY::unknown { padding: 0; }
+
+@keyframes foo {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1 !important;
+  }
+}
+
+.testZ {
+  color: blue;
+
+  & > .test { margin: 0; }
+  --test: green;
+
+  //color: red;
+}
