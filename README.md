@@ -4,7 +4,7 @@ This Stylelint plugin enforces Kaliber's code conventions, helping maintain cons
 
 ## Usage
 
-To use this plugin in your project, create an `.stylelint` file with the following content:
+To use this plugin in your project, create an `.stylelintrc` file with the following content:
 
 ```json
 {
