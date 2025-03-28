@@ -7,6 +7,8 @@ module.exports = {
 }
 
 function findCssGlobalFiles(from) {
+  if (!from) return []
+
   const propertiesDirectory = path.resolve(findRootDirectory(from), './src/cssGlobal')
   return fs.existsSync(propertiesDirectory)
     ? fs.readdirSync(propertiesDirectory)

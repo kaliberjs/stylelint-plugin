@@ -120,7 +120,7 @@ function createPlugin({
       if (!stylelint.utils.validateOptions(result, ruleName, check)) return
 
       const reported = {}
-      const importFrom = findCssGlobalFiles(originalRoot.source.input.file)
+      const importFrom = findCssGlobalFiles(originalRoot?.source?.input?.file)
 
       const modifiedRoot = originalRoot.clone()
       if (resolvedModuleValues) {
