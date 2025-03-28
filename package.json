@@ -6,7 +6,7 @@
     "test-rules": "node --test stylelint-plugins/rules/*/test.js",
     "test": "$npm_execpath test-integration && $npm_execpath test-rules"
   },
-  "devDependencies": {
+  "dependencies": {
     "fs-extra": "^11.3.0",
     "postcss-calc": "^7.0.4",
     "postcss-modules-values": "^3.0.0",
