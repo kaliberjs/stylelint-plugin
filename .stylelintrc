@@ -18,21 +18,21 @@
     "kaliber/selector-policy": true,
 
     "at-rule-blacklist": [
-      'apply',
-      'annotation',
-      'character-variant',
-      'charset',
-      'counter-style',
-      'document',
-      'font-feature-values',
-      'namespace',
-      'nest',
-      'ornaments',
-      'page',
-      'styleset',
-      'stylistic',
-      'swash',
-      'viewport',
+      "apply",
+      "annotation",
+      "character-variant",
+      "charset",
+      "counter-style",
+      "document",
+      "font-feature-values",
+      "namespace",
+      "nest",
+      "ornaments",
+      "page",
+      "styleset",
+      "stylistic",
+      "swash",
+      "viewport"
     ],
     "at-rule-empty-line-before": [
       "always", {
@@ -152,7 +152,7 @@
     "property-no-unknown": [
       true,
       {
-        ignoreSelectors: ":export"
+        "ignoreSelectors": ":export"
       }
     ],
     "rule-empty-line-before": [
@@ -190,7 +190,7 @@
     "selector-type-no-unknown": [
       true,
       {
-        ignore: ["custom-elements"]
+        "ignore": ["custom-elements"]
       }
     ],
     "string-no-newline": true,
@@ -216,7 +216,8 @@
       "svh",
       "svw",
       "lvh",
-      "lvw"
+      "lvw",
+      "ch"
     ],
     "value-list-comma-newline-after": "always-multi-line",
     "value-list-comma-space-after": "always-single-line",
