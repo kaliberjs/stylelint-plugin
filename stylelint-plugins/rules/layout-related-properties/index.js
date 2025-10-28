@@ -6,7 +6,7 @@ const {
 } = require('../../machinery/ast')
 const { flexChildProps, gridChildProps, flexOrGridChildProps } = require('../../machinery/css')
 
-const intrinsicUnits = ['px', 'em', 'rem', 'vw', 'vh', 'dvw', 'dvh', 'svh', 'svw', 'lvh', 'lvw']
+const intrinsicUnits = ['px', 'em', 'rem', 'vw', 'vh', 'dvw', 'dvh', 'svh', 'svw', 'lvh', 'lvw', 'ch']
 const intrinsicProps = ['width', 'height', 'max-width', 'min-width', 'max-height', 'min-height']
 
 const allowedInRootAndChild = [
