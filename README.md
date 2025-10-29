@@ -13,6 +13,11 @@ To use this plugin in your project, create an `.stylelintrc` file with the follo
 }
 ```
 
+## Tests
+> [!CAUTION]
+> When saving a 'bad' `.css` file, use <kbd>META + K + S</kbd> (save without formatting); 
+> some files (e.g. `bad/file.css`) are deliberately wrongly formatted, which your `onSave` will try to 'fix' (which it should not).
+
 ## Publishing a new version
 
 To publish a new version, run the following commands:
