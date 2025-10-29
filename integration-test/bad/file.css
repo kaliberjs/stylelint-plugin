@@ -13,7 +13,7 @@
   transform:
     Translate(1 ,1,
 
-    2
+     2
   )scale(3);
   background: linear-gradient( top,var(--color)/3, #000);
   background-size: 0
@@ -27,7 +27,7 @@
   }
 
   @media screen and (color)
-    ,projection and (color) ,projection {
+     ,projection and (color) ,projection {
     color: red;
   }
 
