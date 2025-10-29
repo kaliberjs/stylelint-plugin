@@ -15,6 +15,8 @@ test('layout-related-properties', {
               position: absolute;
               top: 0; right: 0; bottom: 0; left: 0;
               margin: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;
+              margin-inline: 0; margin-inline-start: 0; margin-inline-end: 0;
+              margin-block: 0; margin-block-start: 0; margin-block-end: 0;
               flex: 0; flex-grow: 0; flex-shrink: 0; flex-basis: 0;
               grid: 0; grid-area: 0; grid-column: 0; grid-row: 0;
               grid-column-start: 0; grid-column-end: 0; grid-row-start: 0; grid-row-end: 0;
@@ -98,6 +100,8 @@ test('layout-related-properties', {
             position: absolute;
             top: 0; right: 0; bottom: 0; left: 0;
             margin: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;
+            margin-inline: 0; margin-inline-start: 0; margin-inline-end: 0;
+            margin-block: 0; margin-block-start: 0; margin-block-end: 0;
             flex: 0; flex-grow: 0; flex-shrink: 0; flex-basis: 0;
             grid: 0; grid-area: 0; grid-column: 0; grid-row: 0;
             grid-column-start: 0; grid-column-end: 0; grid-row-start: 0; grid-row-end: 0;
@@ -111,6 +115,8 @@ test('layout-related-properties', {
           'position: absolute',
           'top', 'right', 'bottom', 'left',
           'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+          'margin-inline', 'margin-inline-start', 'margin-inline-end',
+          'margin-block', 'margin-block-start', 'margin-block-end',
           'flex', 'flex-grow', 'flex-shrink', 'flex-basis',
           'grid', 'grid-area', 'grid-column', 'grid-row',
           'grid-column-start', 'grid-column-end', 'grid-row-start', 'grid-row-end',
@@ -132,6 +138,8 @@ test('layout-related-properties', {
               position: absolute;
               top: 0; right: 0; bottom: 0; left: 0;
               margin: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;
+              margin-inline: 0; margin-inline-start: 0; margin-inline-end: 0;
+              margin-block: 0; margin-block-start: 0; margin-block-end: 0;
               flex: 0; flex-grow: 0; flex-shrink: 0; flex-basis: 0;
               grid: 0; grid-area: 0; grid-column: 0; grid-row: 0;
               grid-column-start: 0; grid-column-end: 0; grid-row-start: 0; grid-row-end: 0;
@@ -145,6 +153,8 @@ test('layout-related-properties', {
           'position: absolute',
           'top', 'right', 'bottom', 'left',
           'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+          'margin-inline', 'margin-inline-start', 'margin-inline-end',
+          'margin-block', 'margin-block-start', 'margin-block-end',
           'flex', 'flex-grow', 'flex-shrink', 'flex-basis',
           'grid', 'grid-area', 'grid-column', 'grid-row',
           'grid-column-start', 'grid-column-end', 'grid-row-start', 'grid-row-end',

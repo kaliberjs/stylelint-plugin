@@ -13,12 +13,12 @@
   transform:
     Translate(1 ,1,
 
-     2
+    2
   )scale(3);
   background: linear-gradient( top,var(--color)/3, #000);
   background-size: 0
 
-  , 0;
+    , 0;
   background-size: 0 ,0;
 
   &::AFTER {position :absolute ;margin: 0}
@@ -27,7 +27,7 @@
   }
 
   @media screen and (color)
-   ,projection and (color) ,projection {
+    ,projection and (color) ,projection {
     color: red;
   }
 
@@ -44,6 +44,13 @@
 
 .test-nesting {
   pad-ding: .0;
+}
+
+.test-policy {
+  &>.test {
+    margin-block: 1ab;
+    margin-inline: 1ab;
+  }
 }
 
 [ test = 2] {
