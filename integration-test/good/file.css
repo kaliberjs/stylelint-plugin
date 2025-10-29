@@ -27,6 +27,13 @@
   }
 }
 
+.test-policy {
+  & > .test {
+    margin-block: 1em;
+    margin-inline: 1em;
+  }
+}
+
 [test=2] {
   padding: 1px;
 
