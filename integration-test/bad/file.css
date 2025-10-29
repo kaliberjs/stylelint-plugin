@@ -46,6 +46,13 @@
   pad-ding: .0;
 }
 
+.test-policy {
+  &>.test {
+    margin-block: 1ab;
+    margin-inline: 1ab;
+  }
+}
+
 [ test = 2] {
   padding: 1PX;
 
