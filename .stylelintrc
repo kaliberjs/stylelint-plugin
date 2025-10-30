@@ -17,7 +17,7 @@
     "kaliber/root-policy": true,
     "kaliber/selector-policy": true,
 
-    "at-rule-blacklist": [
+    "at-rule-disallowed-list": [
       "apply",
       "annotation",
       "character-variant",
@@ -33,20 +33,6 @@
       "stylistic",
       "swash",
       "viewport"
-    ],
-    "at-rule-empty-line-before": [
-      "always", {
-        "except": [
-          "blockless-after-same-name-blockless",
-          "first-nested"
-        ],
-        "ignore": [
-          "after-comment"
-        ],
-        "ignoreAtRules": [
-          "media"
-        ]
-      }
     ],
     "at-rule-name-case": "lower",
     "at-rule-name-space-after": "always-single-line",
@@ -85,14 +71,6 @@
     "custom-property-empty-line-before": null,
     "declaration-bang-space-after": "never",
     "declaration-bang-space-before": "always",
-    "declaration-block-no-duplicate-properties": [
-      true,
-      {
-        "ignore": [
-          "consecutive-duplicates-with-different-values"
-        ]
-      }
-    ],
     "declaration-block-no-shorthand-property-overrides": true,
     "declaration-block-semicolon-newline-after": "always-multi-line",
     "declaration-block-semicolon-space-after": "always-single-line",
@@ -196,7 +174,7 @@
     "string-no-newline": true,
     "unit-case": "lower",
     "unit-no-unknown": null,
-    "unit-whitelist": [
+    "unit-allowed-list": [
       "em",
       "rem",
       "px",

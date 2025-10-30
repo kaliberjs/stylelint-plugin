@@ -108,13 +108,12 @@ function createPlugin({
   resolvedModuleValues = false,
   resolvedCalc = false,
 }) {
-  const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
-
   return {
-    ...stylelintPlugin,
+    ruleName,
+    rule,
   }
 
-  function pluginWrapper(primaryOption, secondaryOptionObject, context) {
+  function rule(primaryOption, secondaryOptionObject, context) {
     return async (originalRoot, result) => {
       const check = { actual: primaryOption, possible: [true] }
       if (!stylelint.utils.validateOptions(result, ruleName, check)) return
@@ -124,22 +123,22 @@ function createPlugin({
 
       const modifiedRoot = originalRoot.clone()
       if (resolvedModuleValues) {
-        await postcssModulesValuesResolver(modifiedRoot, result)
+        await postcssModulesValuesResolver.Once(modifiedRoot, { from: originalRoot?.source?.input?.file })
       }
       if (resolvedCustomProperties) {
         const postcssCustomPropertiesResolver = createPostcssCustomPropertiesResolver({ preserve: false, importFrom })
-        await postcssCustomPropertiesResolver(modifiedRoot, result)
+        await postcssCustomPropertiesResolver.Once(modifiedRoot, { from: originalRoot?.source?.input?.file })
       }
       if (resolvedCustomMedia) {
         const postcssCustomMediaResolver = createPostcssCustomMediaResolver({ preserve: false, importFrom })
-        await postcssCustomMediaResolver(modifiedRoot, result)
+        await postcssCustomMediaResolver.Once(modifiedRoot, { from: originalRoot?.source?.input?.file })
       }
       if (resolvedCustomSelectors) {
         const postcssCustomSelectorsResolver = createPostcssCustomSelectorsResolver({ preserve: false, importFrom })
-        await postcssCustomSelectorsResolver(modifiedRoot, result)
+        await postcssCustomSelectorsResolver.Once(modifiedRoot, { from: originalRoot?.source?.input?.file })
       }
       if (resolvedCalc) {
-        await postcssCalcResolver(modifiedRoot, result)
+        await postcssCalcResolver.Once(modifiedRoot, { from: originalRoot?.source?.input?.file })
       }
       callPlugin(modifiedRoot)
 

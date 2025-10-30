@@ -14,8 +14,7 @@ const problems = new Set([
   'kaliber/reset',
   'kaliber/root-policy',
   'kaliber/selector-policy',
-  'at-rule-blacklist',
-  'at-rule-empty-line-before',
+  'at-rule-disallowed-list',
   'at-rule-name-case',
   'at-rule-name-space-after',
   'at-rule-no-unknown',
@@ -37,7 +36,6 @@ const problems = new Set([
   // 'custom-property-empty-line-before', // rule disabled
   'declaration-bang-space-after',
   'declaration-bang-space-before',
-  'declaration-block-no-duplicate-properties',
   'declaration-block-no-shorthand-property-overrides',
   'declaration-block-semicolon-newline-after',
   'declaration-block-semicolon-space-after',
@@ -104,7 +102,7 @@ const problems = new Set([
   'string-no-newline',
   'unit-case',
   // 'unit-no-unknown', // rule disabled (covered by unit-whitelist)
-  'unit-whitelist',
+  'unit-allowed-list',
   'value-list-comma-newline-after',
   'value-list-comma-space-after',
   'value-list-comma-space-before',
