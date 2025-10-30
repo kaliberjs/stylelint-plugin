@@ -152,7 +152,10 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreSelectors": ":export"
+        "ignoreSelectors": ":export",
+        "ignoreProperties": [
+          "text-wrap"
+        ]
       }
     ],
     "rule-empty-line-before": [
