@@ -7,7 +7,10 @@
     "test": "$npm_execpath test-integration && $npm_execpath test-rules"
   },
   "dependencies": {
+    "@csstools/postcss-global-data": "^3.0.0",
+    "@stylistic/stylelint-plugin": "^3.1.2",
     "fs-extra": "^11.3.2",
+    "postcss": "^8.5.1",
     "postcss-calc": "^10.1.1",
     "postcss-modules-values": "^4.0.0",
     "postcss-preset-env": "^10.1.3",
