@@ -1,14 +1,13 @@
 const stylelint = require('stylelint')
-const createPostcssModulesValuesResolver = require('postcss-modules-values')
-const createPostcssCustomPropertiesResolver = require('postcss-custom-properties')
-const createPostcssCustomMediaResolver = require('postcss-custom-media')
-const createPostcssCustomSelectorsResolver = require('postcss-custom-selectors')
-const createPostcssCalcResolver = require('postcss-calc')
+const postcss = require('postcss')
+const postcssModulesValues = require('postcss-modules-values')
+const postcssGlobalData = require('@csstools/postcss-global-data')
+const postcssCustomProperties = require('postcss-custom-properties')
+const postcssCustomMedia = require('postcss-custom-media')
+const postcssCustomSelectors = require('postcss-custom-selectors')
+const postcssCalc = require('postcss-calc')
 const { findCssGlobalFiles } = require('./machinery/findCssGlobalFiles')
 const { getNormalizedRoots } = require('./machinery/ast')
-
-const postcssModulesValuesResolver = createPostcssModulesValuesResolver()
-const postcssCalcResolver = createPostcssCalcResolver()
 
 /*
   Motivation
@@ -120,28 +119,47 @@ function createPlugin({
       if (!stylelint.utils.validateOptions(result, ruleName, check)) return
 
       const reported = {}
-      const importFrom = findCssGlobalFiles(originalRoot?.source?.input?.file)
+      const globalFiles = findCssGlobalFiles(originalRoot?.source?.input?.file)
 
       const modifiedRoot = originalRoot.clone()
+      
+      // Build a list of PostCSS plugins to run
+      const plugins = []
+      
       if (resolvedModuleValues) {
-        await postcssModulesValuesResolver(modifiedRoot, result)
+        plugins.push(postcssModulesValues())
       }
+      
+      // For custom properties, custom media, and custom selectors, we need to use
+      // postcss-global-data to inject the global CSS files first, then run the resolvers
+      if ((resolvedCustomProperties || resolvedCustomMedia || resolvedCustomSelectors) && globalFiles.length > 0) {
+        plugins.push(postcssGlobalData({ files: globalFiles }))
+      }
+      
       if (resolvedCustomProperties) {
-        const postcssCustomPropertiesResolver = createPostcssCustomPropertiesResolver({ preserve: false, importFrom })
-        await postcssCustomPropertiesResolver(modifiedRoot, result)
+        plugins.push(postcssCustomProperties({ preserve: false }))
       }
       if (resolvedCustomMedia) {
-        const postcssCustomMediaResolver = createPostcssCustomMediaResolver({ preserve: false, importFrom })
-        await postcssCustomMediaResolver(modifiedRoot, result)
+        plugins.push(postcssCustomMedia({ preserve: false }))
       }
       if (resolvedCustomSelectors) {
-        const postcssCustomSelectorsResolver = createPostcssCustomSelectorsResolver({ preserve: false, importFrom })
-        await postcssCustomSelectorsResolver(modifiedRoot, result)
+        plugins.push(postcssCustomSelectors({ preserve: false }))
       }
+      
       if (resolvedCalc) {
-        await postcssCalcResolver(modifiedRoot, result)
+        plugins.push(postcssCalc())
       }
-      callPlugin(modifiedRoot)
+
+      let processedRoot = modifiedRoot
+      
+      // Run the PostCSS plugins on the modified root
+      if (plugins.length > 0) {
+        const processor = postcss(plugins)
+        const processResult = await processor.process(modifiedRoot, { from: undefined })
+        processedRoot = processResult.root
+      }
+      
+      callPlugin(processedRoot)
 
       /*
         This implementation splits it for each plugin. This might be a performance problem. The easy
@@ -150,8 +168,8 @@ function createPlugin({
         different rules manually (stylelint.rules['kaliber/xyz'](...)(splitRoot, result)).
       */
       if (normalizedCss)
-        Object.entries(getNormalizedRoots(modifiedRoot)).forEach(([mediaQuery, modifiedRoot]) => {
-          callPlugin(modifiedRoot)
+        Object.entries(getNormalizedRoots(processedRoot)).forEach(([mediaQuery, normalizedRoot]) => {
+          callPlugin(normalizedRoot)
         })
 
       function callPlugin(modifiedRoot) {
