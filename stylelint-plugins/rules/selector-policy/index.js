@@ -34,6 +34,10 @@ const messages = {
     `unexpected rule in @media\n` +
     `@media should be placed inside rules and not the other way around - ` +
     `swap the selector and @media statement`,
+  'starting-style - no nested child':
+    `unexpected rule in @starting-style\n` +
+    `@starting-style should be placed inside rules and not the other way around - ` +
+    `swap the selector and @starting-style statement`,
   'invalid state selector': type =>
     `no \`${type}\` selector combinator\n` +
     `you can only use direct sibling selectors in combination with a universal state selector - ` +
@@ -60,6 +64,7 @@ module.exports = {
       noDoubleChildSelectorsInNested({ root: originalRoot, report, doubleSelectorsAllowCss, doubleSelectorsAllowRule })
       noTagSelectors({ root: originalRoot, report, tagSelectorsAllowCss })
       noRulesInsideMedia({ root: originalRoot, report })
+      noRulesInsideStartingStyle({ root: originalRoot, report })
     }
   }
 }
@@ -153,6 +158,14 @@ function noRulesInsideMedia({ root, report }) {
   root.walkAtRules('media', rule => {
     rule.walkRules(rule => {
       report(rule, messages['media - no nested child'])
+    })
+  })
+}
+
+function noRulesInsideStartingStyle({ root, report }) {
+  root.walkAtRules('starting-style', rule => {
+    rule.walkRules(rule => {
+      report(rule, messages['starting-style - no nested child'])
     })
   })
 }

@@ -53,6 +53,28 @@ test('selector-policy', {
         `,
       },
       {
+        title: `don't report starting-style in nested child`,
+        code: `
+          .good {
+            & > .test {
+              @starting-style {
+                opacity: 0;
+              }
+            }
+          }
+        `,
+      },
+      {
+        title: `don't report starting-style in root`,
+        code: `
+          .good {
+            @starting-style {
+              opacity: 0;
+            }
+          }
+        `,
+      },
+      {
         title: 'allow svg element selectors',
         code: `
           .good {
@@ -331,6 +353,30 @@ test('selector-policy', {
           }
         `,
         warnings: [messages['media - no nested child']]
+      },
+      {
+        title: `report nested child in starting-style`,
+        code: `
+          .bad {
+            @starting-style {
+              & > .test {
+                opacity: 0;
+              }
+            }
+          }
+        `,
+        warnings: [messages['starting-style - no nested child']]
+      },
+      {
+        title: `report nested child in starting-style (root)`,
+        code: `
+          @starting-style {
+            .bad {
+              opacity: 0;
+            }
+          }
+        `,
+        warnings: [messages['starting-style - no nested child']]
       },
     ]
   }
