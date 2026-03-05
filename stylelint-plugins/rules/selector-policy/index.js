@@ -38,6 +38,10 @@ const messages = {
     `unexpected rule in @starting-style\n` +
     `@starting-style should be placed inside rules and not the other way around - ` +
     `swap the selector and @starting-style statement`,
+  'view-transition - no nested child':
+    `unexpected rule in @view-transition\n` +
+    `@view-transition should be placed inside rules and not the other way around - ` +
+    `swap the selector and @view-transition statement`,
   'invalid state selector': type =>
     `no \`${type}\` selector combinator\n` +
     `you can only use direct sibling selectors in combination with a universal state selector - ` +
@@ -65,6 +69,7 @@ module.exports = {
       noTagSelectors({ root: originalRoot, report, tagSelectorsAllowCss })
       noRulesInsideMedia({ root: originalRoot, report })
       noRulesInsideStartingStyle({ root: originalRoot, report })
+      noRulesInsideViewTransition({ root: originalRoot, report })
     }
   }
 }
@@ -166,6 +171,14 @@ function noRulesInsideStartingStyle({ root, report }) {
   root.walkAtRules('starting-style', rule => {
     rule.walkRules(rule => {
       report(rule, messages['starting-style - no nested child'])
+    })
+  })
+}
+
+function noRulesInsideViewTransition({ root, report }) {
+  root.walkAtRules('view-transition', rule => {
+    rule.walkRules(rule => {
+      report(rule, messages['view-transition - no nested child'])
     })
   })
 }

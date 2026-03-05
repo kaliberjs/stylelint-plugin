@@ -129,6 +129,7 @@ function getNormalizedRoots(root) {
   const clone = root.clone()
   clone.walkAtRules('media', x => { x.remove() })
   clone.walkAtRules('starting-style', x => { x.remove() })
+  clone.walkAtRules('view-transition', x => { x.remove() })
 
   const byMediaQueries = combinations.reduce(
     (result, atRules) => {
@@ -149,7 +150,6 @@ function getNormalizedRoots(root) {
     const supportsSet = new Set()
     root.walkAtRules('media', x => { mediaQueriesSet.add(x.params) })
     root.walkAtRules('supports', x => { supportsSet.add(x.params) })
-    root.walkAtRules('starting-style', x => { mediaQueriesSet.add('@starting-style') })
 
     const supports = Array.from(supportsSet).map(params => ({ type: 'supports', params }))
     const supportsCombinations = getAllPossibleCombinations(supports)
