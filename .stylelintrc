@@ -152,7 +152,11 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreSelectors": ":export"
+        "ignoreSelectors": ":export",
+        "ignoreProperties": [
+          "container-type",
+          "interpolate-size"
+        ]
       }
     ],
     "rule-empty-line-before": [
@@ -217,7 +221,13 @@
       "svw",
       "lvh",
       "lvw",
-      "ch"
+      "ch",
+      "cqw",
+      "cqh",
+      "cqi",
+      "cqb",
+      "cqmin",
+      "cqmax"
     ],
     "value-list-comma-newline-after": "always-multi-line",
     "value-list-comma-space-after": "always-single-line",
