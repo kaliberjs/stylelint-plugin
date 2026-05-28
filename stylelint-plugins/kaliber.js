@@ -204,14 +204,15 @@ function createPlugin({
 }
 
 function getReportLocation(node, index) {
-  const startOffset = node.source?.start?.offset
-  const endOffset = node.source?.end?.offset
-  const preferredIndex = Number.isInteger(index) ? index : startOffset
-  const preferredEndIndex = endOffset ?? (Number.isInteger(preferredIndex) ? preferredIndex + node.toString().length : undefined)
+  if (!Number.isInteger(index)) return {}
 
-  return preferredIndex != null && preferredEndIndex != null
-    ? { index: preferredIndex, endIndex: preferredEndIndex }
-    : {}
+  const endOffset = node.source?.end?.offset
+  const startOffset = node.source?.start?.offset
+  const endIndex = endOffset != null && startOffset != null
+    ? endOffset - startOffset
+    : index + node.toString().length
+
+  return { index, endIndex }
 }
 
 function getId(node, message, index) {
