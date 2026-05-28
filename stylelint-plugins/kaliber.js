@@ -107,9 +107,7 @@ function createPlugin({
 }) {
   const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
 
-  return {
-    ...stylelintPlugin,
-  }
+  return stylelintPlugin
 
   function pluginWrapper(primaryOption, secondaryOptionObject, context) {
     return async (originalRoot, result) => {
@@ -170,15 +168,40 @@ function createPlugin({
       function report(node, message, index) {
         const id = getId(node, message, index)
         if (reported[id]) return
-        else reported[id] = true
-        if (!node.source) stylelint.utils.report({
-          message: `A generated node (${getNodeId(node)}) caused a problem\n  ${node.toString().split('\n').join('\n  ')}\n${message}`,
-          node: node.parent, result, ruleName
+        reported[id] = true
+
+        if (!node.source) {
+          stylelint.utils.report({
+            message: `A generated node (${getNodeId(node)}) caused a problem\n  ${node.toString().split('\n').join('\n  ')}\n${message}`,
+            node: node.parent,
+            result,
+            ruleName,
+          })
+          return
+        }
+
+        const reportLocation = getReportLocation(node, index)
+        stylelint.utils.report({
+          message,
+          node,
+          result,
+          ruleName,
+          ...reportLocation,
         })
-        else stylelint.utils.report({ message, index, node, result, ruleName })
       }
     }
   }
+}
+
+function getReportLocation(node, index) {
+  const startOffset = node.source?.start?.offset
+  const endOffset = node.source?.end?.offset
+  const preferredIndex = Number.isInteger(index) ? index : startOffset
+  const preferredEndIndex = endOffset ?? (Number.isInteger(preferredIndex) ? preferredIndex + node.toString().length : undefined)
+
+  return preferredIndex != null && preferredEndIndex != null
+    ? { index: preferredIndex, endIndex: preferredEndIndex }
+    : {}
 }
 
 function getId(node, message, index) {

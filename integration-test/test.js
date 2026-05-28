@@ -15,6 +15,7 @@ const problems = new Set([
   'kaliber/root-policy',
   'kaliber/selector-policy',
   'at-rule-disallowed-list',
+  'at-rule-empty-line-before',
   'at-rule-no-unknown',
   '@stylistic/at-rule-name-case',
   '@stylistic/at-rule-name-space-after',
@@ -137,20 +138,22 @@ describe('Integration test', () => {
 
 function styleLint(files) {
   const { FORCE_COLOR, ...env } = process.env
-  const result = spawnSync(`node ./node_modules/.bin/stylelint --no-color ${files.join(' ')}`, { env, shell: true })
-  // Stylelint 16 outputs to stderr instead of stdout
-  const resultString = result.stderr.toString()
-  const results = resultString.split('\n')
-    .filter(x => x.includes('⚠') || x.includes('✖'))
-    // Exclude summary lines like "⚠ 110 problems (0 errors, 110 warnings)"
-    .filter(x => !/^\s*[⚠✖]\s+\d+\s+problem/.test(x))
-    .map(x => {
-      const segments = x.split(/\s+/).filter(Boolean)
-      const [lastSegment] = segments.slice(-1)
-      return lastSegment
-    })
+  const result = spawnSync(
+    `node ./node_modules/.bin/stylelint --formatter json ${files.join(' ')}`,
+    { env, shell: true }
+  )
 
-  const reportedProblems = new Set(results)
+  const raw = result.stdout.toString() || result.stderr.toString()
+  let output
+  try {
+    output = JSON.parse(raw)
+  } catch {
+    throw new Error(`stylelint produced no valid JSON output.\nstdout: ${result.stdout.toString()}\nstderr: ${result.stderr.toString()}`)
+  }
+
+  const reportedProblems = new Set(
+    output.flatMap(file => file.warnings.map(warning => warning.rule))
+  )
 
   return reportedProblems
 }

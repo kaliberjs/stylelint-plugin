@@ -42,6 +42,20 @@
         "ignoreAtRules": [ "value", "kaliber-scoped" ]
       }
     ],
+    "at-rule-empty-line-before": [
+      "always", {
+        "except": [
+          "blockless-after-same-name-blockless",
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment"
+        ],
+        "ignoreAtRules": [
+          "media"
+        ]
+      }
+    ],
     "@stylistic/at-rule-semicolon-newline-after": "always",
     "@stylistic/block-closing-brace-empty-line-before": "never",
     "@stylistic/block-closing-brace-newline-after": "always",

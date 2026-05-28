@@ -49,5 +49,5 @@ async function runTest(ruleName, test) {
     assert.deepEqual(warningTexts, test.warnings || [], 'warnings')
   }
 
-  assert.equal(results.output, test.output || '')
+  assert.equal(results.code ?? '', test.output || '')
 }
