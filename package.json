@@ -1,8 +1,11 @@
 {
   "name": "@kaliber/stylelint-plugin",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.2",
   "type": "module",
-  "exports": "./stylelint-plugins/kaliber.js",
+  "exports": {
+    ".": "./stylelint-plugins/kaliber.js",
+    "./.stylelintrc": "./.stylelintrc"
+  },
   "engines": {
     "node": ">=20.19.0"
   },
