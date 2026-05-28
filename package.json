@@ -7,18 +7,18 @@
     "test": "$npm_execpath test-integration && $npm_execpath test-rules"
   },
   "dependencies": {
-    "@stylistic/stylelint-plugin": "^3.1.2",
-    "fs-extra": "^11.3.2",
-    "postcss": "^8.5.1",
+    "@stylistic/stylelint-plugin": "^5.2.0",
+    "fs-extra": "^11.3.5",
+    "postcss": "^8.5.15",
     "postcss-calc": "^10.1.1",
-    "postcss-custom-media": "^11.0.6",
-    "postcss-custom-properties": "^14.0.6",
-    "postcss-custom-selectors": "^8.0.5",
+    "postcss-custom-media": "^12.0.1",
+    "postcss-custom-properties": "^15.0.1",
+    "postcss-custom-selectors": "^9.0.1",
     "postcss-modules-values": "^4.0.0",
-    "postcss-preset-env": "^10.1.3",
+    "postcss-preset-env": "^11.3.0",
     "postcss-selector-parser": "^7.0.0",
-    "postcss-values-parser": "^6.0.2",
-    "stylelint": "^16.11.0",
+    "postcss-values-parser": "^8.0.0",
+    "stylelint": "^17.12.0",
     "stylelint-use-nesting": "^6.0.0"
   }
 }
