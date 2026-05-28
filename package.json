@@ -1,6 +1,8 @@
 {
   "name": "@kaliber/stylelint-plugin",
   "version": "1.0.3",
+  "type": "module",
+  "exports": "./stylelint-plugins/kaliber.js",
   "scripts": {
     "test-integration": "node --test integration-test/test.js",
     "test-rules": "node --test stylelint-plugins/rules/*/test.js",

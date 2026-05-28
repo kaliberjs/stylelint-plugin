@@ -1,11 +1,21 @@
-const stylelint = require('stylelint')
-const postcss = require('postcss')
-const postcssModulesValues = require('postcss-modules-values')
-const postcssCustomProperties = require('postcss-custom-properties')
-const postcssCustomMedia = require('postcss-custom-media')
-const postcssCustomSelectors = require('postcss-custom-selectors')
-const postcssCalc = require('postcss-calc')
-const { getNormalizedRoots } = require('./machinery/ast')
+import stylelint from 'stylelint'
+import postcss from 'postcss'
+import postcssModulesValues from 'postcss-modules-values'
+import postcssCustomProperties from 'postcss-custom-properties'
+import postcssCustomMedia from 'postcss-custom-media'
+import postcssCustomSelectors from 'postcss-custom-selectors'
+import postcssCalc from 'postcss-calc'
+import { getNormalizedRoots } from './machinery/ast.js'
+import colorSchemes from './rules/color-schemes/index.js'
+import cssGlobal from './rules/css-global/index.js'
+import layoutRelatedProperties from './rules/layout-related-properties/index.js'
+import namingPolicy from './rules/naming-policy/index.js'
+import selectorPolicy from './rules/selector-policy/index.js'
+import parentChildPolicy from './rules/parent-child-policy/index.js'
+import rootPolicy from './rules/root-policy/index.js'
+import atRuleRestrictions from './rules/at-rule-restrictions/index.js'
+import indexRule from './rules/index/index.js'
+import reset from './rules/reset/index.js'
 
 /*
   Motivation
@@ -19,18 +29,18 @@ const { getNormalizedRoots } = require('./machinery/ast')
 */
 
 const rules = toStyleLintPlugins(
-  require('./rules/color-schemes'),
-  require('./rules/css-global'),
-  require('./rules/layout-related-properties'),
-  require('./rules/naming-policy'),
-  require('./rules/selector-policy'),
-  require('./rules/parent-child-policy'),
-  require('./rules/root-policy'),
-  require('./rules/at-rule-restrictions'),
-  require('./rules/index'),
-  require('./rules/reset'),
+  colorSchemes,
+  cssGlobal,
+  layoutRelatedProperties,
+  namingPolicy,
+  selectorPolicy,
+  parentChildPolicy,
+  rootPolicy,
+  atRuleRestrictions,
+  indexRule,
+  reset,
 )
-module.exports = rules
+export default rules
 
 function toStyleLintPlugins(...rules) {
   const ruleInteraction = determineRuleInteraction(rules)

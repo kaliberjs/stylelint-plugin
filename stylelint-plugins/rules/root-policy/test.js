@@ -1,5 +1,5 @@
-const { messages } = require('./')
-const { test } = require('../../machinery/test')
+import { messages } from './index.js'
+import { test } from '../../machinery/test.js'
 
 test('root-policy', {
   'root-policy': {

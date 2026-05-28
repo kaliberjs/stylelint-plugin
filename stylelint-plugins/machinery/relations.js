@@ -1,6 +1,6 @@
-const { findDecls } = require('./ast')
+import { findDecls } from './ast.js'
 
-module.exports = { checkRuleRelation }
+export { checkRuleRelation }
 
 function checkRuleRelation({ rule, triggerProperties, rulesToCheck, requiredProperties }) {
   const triggerDecls = findDecls(rule, triggerProperties)

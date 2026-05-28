@@ -1,7 +1,7 @@
-const { messages } = require('./')
-const { messages: layoutRelatedPropertiesMessages } = require('../layout-related-properties/')
-const { messages: selectorPolicyMessages } = require('../selector-policy/')
-const { test } = require('../../machinery/test')
+import { messages } from './index.js'
+import { messages as layoutRelatedPropertiesMessages } from '../layout-related-properties/index.js'
+import { messages as selectorPolicyMessages } from '../selector-policy/index.js'
+import { test } from '../../machinery/test.js'
 
 test('naming-policy', {
   'naming-policy': {

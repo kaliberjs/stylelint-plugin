@@ -1,6 +1,6 @@
-const assert = require('node:assert')
-const { spawnSync } = require('node:child_process')
-const { describe, test } = require('node:test')
+import assert from 'node:assert'
+import { spawnSync } from 'node:child_process'
+import { describe, test } from 'node:test'
 
 const problems = new Set([
   'csstools/use-nesting',

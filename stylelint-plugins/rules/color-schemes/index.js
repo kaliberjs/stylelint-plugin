@@ -1,18 +1,18 @@
-const { matchesFile } = require('../../machinery/filename')
+import { matchesFile } from '../../machinery/filename.js'
 
 const allowedInColorScheme = [
   'color', 'background-color', 'border-color',
   'stroke', 'fill',
 ]
 
-const messages = {
+export const messages = {
   'only color related properties': prop =>
     `Unexpected property ${prop}\n` +
     `you can only use color related properties in color schemes - ` +
     `move the property to another file or use one of the advanced color values like #RRGGBBAA or color-mod(...)`
 }
 
-module.exports = {
+export default {
   ruleName: 'color-schemes',
   ruleInteraction: {
     'layout-related-properties': {

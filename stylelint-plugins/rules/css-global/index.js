@@ -1,4 +1,4 @@
-const { matchesFile } = require('../../machinery/filename')
+import { matchesFile } from '../../machinery/filename.js'
 
 const exclusiveToCssGlobal = {
   selectors: [':root'],
@@ -10,7 +10,7 @@ const allowedInCssGlobal = {
   atRules: ['value'],
 }
 
-const messages = {
+export const messages = {
   'no': name =>
     `Unexpected ${name}\n` +
     `you can only use ${name} in the \`cssGlobal\` directory - ` +
@@ -21,7 +21,7 @@ const messages = {
     `move ${name} to \`reset.css\` or \`index.css\``,
 }
 
-module.exports = {
+export default {
   ruleName: 'css-global',
   ruleInteraction: {
     'layout-related-properties': {

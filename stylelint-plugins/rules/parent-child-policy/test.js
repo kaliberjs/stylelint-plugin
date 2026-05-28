@@ -1,6 +1,6 @@
-const { messages } = require('./')
-const layoutRelatedProperties = require('../layout-related-properties')
-const { test } = require('../../machinery/test')
+import { messages } from './index.js'
+import layoutRelatedProperties from '../layout-related-properties/index.js'
+import { test } from '../../machinery/test.js'
 
 function createMessages(key, values) { return values.map(messages[key]) }
 

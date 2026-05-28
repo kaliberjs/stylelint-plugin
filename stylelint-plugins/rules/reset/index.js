@@ -1,5 +1,5 @@
-const { declMatches, parseSelector } = require('../../machinery/ast')
-const { isFile } = require('../../machinery/filename')
+import { declMatches, parseSelector } from '../../machinery/ast.js'
+import { isFile } from '../../machinery/filename.js'
 
 const allowedInReset = [
   'width', 'height',
@@ -7,14 +7,14 @@ const allowedInReset = [
   'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
 ]
 
-const messages = {
+export const messages = {
   'no class selectors': selector =>
     `Unexpected class selector '${selector}', only tag selectors are allowed in reset.css`,
   'only scope custom element':
     `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
-module.exports = {
+export default {
   ruleName: 'reset',
   ruleInteraction: {
     'layout-related-properties': {

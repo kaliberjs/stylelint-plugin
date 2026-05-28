@@ -1,7 +1,7 @@
-const { parseSelector } = require('../../machinery/ast')
-const { isFile } = require('../../machinery/filename')
+import { parseSelector } from '../../machinery/ast.js'
+import { isFile } from '../../machinery/filename.js'
 
-const messages = {
+export const messages = {
   'no class selectors': selector =>
     `Unexpected class selector '${selector}', only tag selectors are allowed in index.css - ` +
       `move the selector to another file or wrap it in \`:global(...)\``,
@@ -11,7 +11,7 @@ const messages = {
     `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
-module.exports = {
+export default {
   ruleName: 'index',
   ruleInteraction: {
     'selector-policy': {

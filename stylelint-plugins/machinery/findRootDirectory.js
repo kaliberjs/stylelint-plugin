@@ -1,8 +1,8 @@
-const fs = require('node:fs')
-const path = require('node:path')
-const process = require('node:process')
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
 
-module.exports = { findRootDirectory }
+export { findRootDirectory }
 
 function findRootDirectory(cwd) {
   const filePath = findFileInParents('package.json', cwd)
