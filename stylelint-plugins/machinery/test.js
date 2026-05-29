@@ -45,7 +45,6 @@ async function runTest(ruleName, test) {
   if (typeof test.warnings === 'number') {
     assert.equal(warnings.length, test.warnings, `Expected ${test.warnings} warnings, received ${warnings.length} warnings`)
   } else {
-    // Stylelint 16 appends rule name to warnings, e.g. "(kaliber/rule-name)" - strip it for comparison
     const warningTexts = warnings.map(x => x.text.replace(/\s*\(kaliber\/[^)]+\)$/, ''))
     assert.deepEqual(warningTexts, test.warnings || [], 'warnings')
   }
