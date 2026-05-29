@@ -1,6 +1,6 @@
 {
   "name": "@kaliber/stylelint-plugin",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0",
   "type": "module",
   "exports": {
     ".": "./stylelint-plugins/kaliber.js",
