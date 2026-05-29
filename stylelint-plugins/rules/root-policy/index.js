@@ -1,11 +1,11 @@
-const {
+import {
   withRootRules,
   isRoot,
   getRootRules,
-} = require('../../machinery/ast')
-const { checkRuleRelation } = require('../../machinery/relations')
+} from '../../machinery/ast.js'
+import { checkRuleRelation } from '../../machinery/relations.js'
 
-const messages = {
+export const messages = {
   'root - z-index without position relative':
     'missing `position: relative;`\n' +
     '`z-index` can only be used at the root level to create a non invasive stacking context - ' +
@@ -26,7 +26,7 @@ const rootCombos = {
   },
 }
 
-module.exports = {
+export default {
   ruleName: 'root-policy',
   ruleInteraction: {
     'layout-related-properties': {

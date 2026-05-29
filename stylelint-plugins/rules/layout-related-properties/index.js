@@ -1,10 +1,10 @@
-const {
+import {
   declMatches, findDecls,
   parseValue, parseSelector,
   withRootRules, withNestedRules,
   isPseudoElement,
-} = require('../../machinery/ast')
-const { flexChildProps, gridChildProps, flexOrGridChildProps } = require('../../machinery/css')
+} from '../../machinery/ast.js'
+import { flexChildProps, gridChildProps, flexOrGridChildProps } from '../../machinery/css.js'
 
 const intrinsicUnits = ['px', 'em', 'rem', 'vw', 'vh', 'dvw', 'dvh', 'svh', 'svw', 'lvh', 'lvw', 'ch']
 const intrinsicProps = ['width', 'height', 'max-width', 'min-width', 'max-height', 'min-height']
@@ -32,7 +32,7 @@ const layoutRelatedProps = [ // only allowed in child
 ]
 const layoutRelatedPropsWithValues = extractPropsWithValues(layoutRelatedProps)
 
-const messages = {
+export const messages = {
   'root - no layout related props': prop =>
     `illegal layout related prop\n` +
     `\`${prop}\` can only be used by root rules in nested selectors - ` +
@@ -49,7 +49,7 @@ const messages = {
     `move to another root rule`,
 }
 
-module.exports = {
+export default {
   ruleName: 'layout-related-properties',
   ruleInteraction: null,
   cssRequirements: {

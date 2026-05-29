@@ -9,9 +9,31 @@ To use this plugin in your project, create an `.stylelintrc` file with the follo
 ```json
 {
   "ignoreFiles": ["node_modules/**/*", "**/*.js", "**/*.svg", "**/*.md"],
-  "extends": "./node_modules/@kaliber/stylelint-plugin/.stylelintrc"
+  "extends": "@kaliber/stylelint-plugin/.stylelintrc"
 }
 ```
+
+## Migrating from v1 to v2
+
+Stylelint has been updated to v17. If you only use `extends` without overriding individual rules, no changes are needed.
+
+If you override formatting rules, they've moved to the `@stylistic/` namespace. Two rules were also renamed:
+
+```diff
+ {
+   "extends": "@kaliber/stylelint-plugin/.stylelintrc",
+   "rules": {
+-    "indentation": 4,
++    "@stylistic/indentation": 4,
+-    "at-rule-blacklist": ["apply"],
++    "at-rule-disallowed-list": ["apply"],
+-    "unit-whitelist": ["px", "rem"],
++    "unit-allowed-list": ["px", "rem"]
+   }
+ }
+```
+
+See the [full list of moved rules](https://github.com/stylelint-stylistic/stylelint-stylistic).
 
 ## Tests
 > [!CAUTION]

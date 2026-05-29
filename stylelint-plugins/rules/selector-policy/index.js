@@ -1,13 +1,11 @@
-const {
+import {
   parseSelector,
   withRootRules, withNestedRules,
   isRoot, hasChildSelector,
   getParentRule, getChildSelectors, getRootRules,
-} = require('../../machinery/ast')
+} from '../../machinery/ast.js'
 
-const { isSelector } = require('postcss-selector-parser')
-
-const messages = {
+export const messages = {
   'only direct child selectors': type =>
     `no \`${type}\` selector combinator\n` +
     `it is only allowed to use direct child selectors - ` +
@@ -40,7 +38,7 @@ const messages = {
     'change the selector to `*:checked +`'
 }
 
-module.exports = {
+export default {
   ruleName: 'selector-policy',
   ruleInteraction: null,
   cssRequirements: {

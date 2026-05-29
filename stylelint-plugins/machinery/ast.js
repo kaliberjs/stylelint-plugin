@@ -1,9 +1,9 @@
-const { parse: parseValue } = require('postcss-values-parser')
-const createSelectorParser = require('postcss-selector-parser')
+import { parse as parseValue } from 'postcss-values-parser'
+import createSelectorParser from 'postcss-selector-parser'
 
 const selectorParser = createSelectorParser()
 
-module.exports = {
+export {
   declMatches, findDecls,
   parseValue, parseSelector,
   withRootRules, withNestedRules,

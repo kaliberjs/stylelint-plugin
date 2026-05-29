@@ -1,5 +1,6 @@
 @import './a.css';
 @import './a.css'; @NAMESPACE "";
+@namespace "";
 
 
 .test-nesting {

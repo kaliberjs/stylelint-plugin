@@ -1,14 +1,21 @@
-const stylelint = require('stylelint')
-const createPostcssModulesValuesResolver = require('postcss-modules-values')
-const createPostcssCustomPropertiesResolver = require('postcss-custom-properties')
-const createPostcssCustomMediaResolver = require('postcss-custom-media')
-const createPostcssCustomSelectorsResolver = require('postcss-custom-selectors')
-const createPostcssCalcResolver = require('postcss-calc')
-const { findCssGlobalFiles } = require('./machinery/findCssGlobalFiles')
-const { getNormalizedRoots } = require('./machinery/ast')
-
-const postcssModulesValuesResolver = createPostcssModulesValuesResolver()
-const postcssCalcResolver = createPostcssCalcResolver()
+import stylelint from 'stylelint'
+import postcss from 'postcss'
+import postcssModulesValues from 'postcss-modules-values'
+import postcssCustomProperties from 'postcss-custom-properties'
+import postcssCustomMedia from 'postcss-custom-media'
+import postcssCustomSelectors from 'postcss-custom-selectors'
+import postcssCalc from 'postcss-calc'
+import { getNormalizedRoots } from './machinery/ast.js'
+import colorSchemes from './rules/color-schemes/index.js'
+import cssGlobal from './rules/css-global/index.js'
+import layoutRelatedProperties from './rules/layout-related-properties/index.js'
+import namingPolicy from './rules/naming-policy/index.js'
+import selectorPolicy from './rules/selector-policy/index.js'
+import parentChildPolicy from './rules/parent-child-policy/index.js'
+import rootPolicy from './rules/root-policy/index.js'
+import atRuleRestrictions from './rules/at-rule-restrictions/index.js'
+import indexRule from './rules/index/index.js'
+import reset from './rules/reset/index.js'
 
 /*
   Motivation
@@ -22,18 +29,18 @@ const postcssCalcResolver = createPostcssCalcResolver()
 */
 
 const rules = toStyleLintPlugins(
-  require('./rules/color-schemes'),
-  require('./rules/css-global'),
-  require('./rules/layout-related-properties'),
-  require('./rules/naming-policy'),
-  require('./rules/selector-policy'),
-  require('./rules/parent-child-policy'),
-  require('./rules/root-policy'),
-  require('./rules/at-rule-restrictions'),
-  require('./rules/index'),
-  require('./rules/reset'),
+  colorSchemes,
+  cssGlobal,
+  layoutRelatedProperties,
+  namingPolicy,
+  selectorPolicy,
+  parentChildPolicy,
+  rootPolicy,
+  atRuleRestrictions,
+  indexRule,
+  reset,
 )
-module.exports = rules
+export default rules
 
 function toStyleLintPlugins(...rules) {
   const ruleInteraction = determineRuleInteraction(rules)
@@ -110,9 +117,7 @@ function createPlugin({
 }) {
   const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
 
-  return {
-    ...stylelintPlugin,
-  }
+  return stylelintPlugin
 
   function pluginWrapper(primaryOption, secondaryOptionObject, context) {
     return async (originalRoot, result) => {
@@ -120,28 +125,40 @@ function createPlugin({
       if (!stylelint.utils.validateOptions(result, ruleName, check)) return
 
       const reported = {}
-      const importFrom = findCssGlobalFiles(originalRoot?.source?.input?.file)
 
       const modifiedRoot = originalRoot.clone()
+      
+      // Build a list of PostCSS plugins to run
+      const plugins = []
+      
       if (resolvedModuleValues) {
-        await postcssModulesValuesResolver(modifiedRoot, result)
+        plugins.push(postcssModulesValues())
       }
+      
       if (resolvedCustomProperties) {
-        const postcssCustomPropertiesResolver = createPostcssCustomPropertiesResolver({ preserve: false, importFrom })
-        await postcssCustomPropertiesResolver(modifiedRoot, result)
+        plugins.push(postcssCustomProperties({ preserve: false }))
       }
       if (resolvedCustomMedia) {
-        const postcssCustomMediaResolver = createPostcssCustomMediaResolver({ preserve: false, importFrom })
-        await postcssCustomMediaResolver(modifiedRoot, result)
+        plugins.push(postcssCustomMedia({ preserve: false }))
       }
       if (resolvedCustomSelectors) {
-        const postcssCustomSelectorsResolver = createPostcssCustomSelectorsResolver({ preserve: false, importFrom })
-        await postcssCustomSelectorsResolver(modifiedRoot, result)
+        plugins.push(postcssCustomSelectors({ preserve: false }))
       }
+      
       if (resolvedCalc) {
-        await postcssCalcResolver(modifiedRoot, result)
+        plugins.push(postcssCalc())
       }
-      callPlugin(modifiedRoot)
+
+      let processedRoot = modifiedRoot
+      
+      // Run the PostCSS plugins on the modified root
+      if (plugins.length > 0) {
+        const processor = postcss(plugins)
+        const processResult = await processor.process(modifiedRoot, { from: undefined })
+        processedRoot = processResult.root
+      }
+      
+      callPlugin(processedRoot)
 
       /*
         This implementation splits it for each plugin. This might be a performance problem. The easy
@@ -150,8 +167,8 @@ function createPlugin({
         different rules manually (stylelint.rules['kaliber/xyz'](...)(splitRoot, result)).
       */
       if (normalizedCss)
-        Object.entries(getNormalizedRoots(modifiedRoot)).forEach(([mediaQuery, modifiedRoot]) => {
-          callPlugin(modifiedRoot)
+        Object.entries(getNormalizedRoots(processedRoot)).forEach(([mediaQuery, normalizedRoot]) => {
+          callPlugin(normalizedRoot)
         })
 
       function callPlugin(modifiedRoot) {
@@ -161,15 +178,41 @@ function createPlugin({
       function report(node, message, index) {
         const id = getId(node, message, index)
         if (reported[id]) return
-        else reported[id] = true
-        if (!node.source) stylelint.utils.report({
-          message: `A generated node (${getNodeId(node)}) caused a problem\n  ${node.toString().split('\n').join('\n  ')}\n${message}`,
-          node: node.parent, result, ruleName
+        reported[id] = true
+
+        if (!node.source) {
+          stylelint.utils.report({
+            message: `A generated node (${getNodeId(node)}) caused a problem\n  ${node.toString().split('\n').join('\n  ')}\n${message}`,
+            node: node.parent,
+            result,
+            ruleName,
+          })
+          return
+        }
+
+        const reportLocation = getReportLocation(node, index)
+        stylelint.utils.report({
+          message,
+          node,
+          result,
+          ruleName,
+          ...reportLocation,
         })
-        else stylelint.utils.report({ message, index, node, result, ruleName })
       }
     }
   }
+}
+
+function getReportLocation(node, index) {
+  if (!Number.isInteger(index)) return {}
+
+  const endOffset = node.source?.end?.offset
+  const startOffset = node.source?.start?.offset
+  const endIndex = endOffset != null && startOffset != null
+    ? endOffset - startOffset
+    : index + node.toString().length
+
+  return { index, endIndex }
 }
 
 function getId(node, message, index) {

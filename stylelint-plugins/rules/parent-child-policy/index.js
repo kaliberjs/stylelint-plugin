@@ -1,15 +1,15 @@
-const {
+import {
   findDecls,
   parseSelector,
   withRootRules,
   withNestedRules,
   isRoot, declMatches,
   getRootRules,
-} = require('../../machinery/ast')
-const { checkRuleRelation } = require('../../machinery/relations')
-const { flexChildProps, gridChildProps, flexOrGridChildProps } = require('../../machinery/css')
+} from '../../machinery/ast.js'
+import { checkRuleRelation } from '../../machinery/relations.js'
+import { flexChildProps, gridChildProps, flexOrGridChildProps } from '../../machinery/css.js'
 
-const messages = {
+export const messages = {
   'nested - missing stacking context in parent':
     'missing stacking context (`position: relative; z-index: 0;`)\n' +
     '`z-index` can only be used when the containing root rule creates a new stacking context - ' +
@@ -99,7 +99,7 @@ const childParentRelations = {
   },
 }
 
-module.exports = {
+export default {
   ruleName: 'parent-child-policy',
   ruleInteraction: {
     'layout-related-properties': {

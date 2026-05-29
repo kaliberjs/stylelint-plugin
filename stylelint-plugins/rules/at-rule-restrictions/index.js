@@ -1,6 +1,6 @@
-const { matchesFile } = require('../../machinery/filename')
+import { matchesFile } from '../../machinery/filename.js'
 
-const messages = {
+export const messages = {
   'no import':
     `Unexpected @import\n` +
     `you can only use @import in \`*.entry.css\` files or in \`index.css\` files - ` +
@@ -11,7 +11,7 @@ const messages = {
     `you can only use @kaliber-scoped in locations that have been whitelisted by other rules.`
 }
 
-module.exports = {
+export default {
   ruleName: 'at-rule-restrictions',
   ruleInteraction: null,
   cssRequirements: {

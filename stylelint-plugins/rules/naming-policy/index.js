@@ -1,8 +1,8 @@
-const {
+import {
   parseSelector,
   withNestedRules,
   getRootRules,
-} = require('../../machinery/ast')
+} from '../../machinery/ast.js'
 
 const pseudoStates = [
   ':hover', ':active', ':focus', ':focus-within',
@@ -10,7 +10,7 @@ const pseudoStates = [
   ':empty', ':valid', ':invalid', ':in-range', ':out-of-range',
 ]
 
-const messages = {
+export const messages = {
   'nested - no component class name in nested': className =>
     `illegal class name\n` +
     `\`${className}\` can not be used in nested selectors - ` +
@@ -31,7 +31,7 @@ const messages = {
     `remove the _root or component_root prefix`,
 }
 
-module.exports = {
+export default {
   ruleName: 'naming-policy',
   ruleInteraction: {
     'layout-related-properties': {

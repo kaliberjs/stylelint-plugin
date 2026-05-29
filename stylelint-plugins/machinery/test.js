@@ -1,8 +1,9 @@
-const assert = require('assert')
-const stylelint = require('stylelint')
-const { describe, it } = require('node:test')
+import assert from 'node:assert'
+import stylelint from 'stylelint'
+import { describe, it } from 'node:test'
+import { fileURLToPath } from 'node:url'
 
-module.exports = { test }
+export { test }
 
 function test(ruleName, tests) {
   Object.entries(tests).forEach(([ruleNameToTest, { valid, invalid }]) => {
@@ -32,7 +33,7 @@ async function runTest(ruleName, test) {
     codeFilename: test.filename,
     formatter: x => '', // When it fixes stuff, this function is not called (the new CSS is the output). If there are errors, the output contains the result of this function.
     config: {
-      plugins: [require.resolve('../kaliber')],
+      plugins: [fileURLToPath(new URL('../kaliber.js', import.meta.url))],
       rules: {
         [`kaliber/${ruleName}`]: [true]
       }
@@ -44,8 +45,9 @@ async function runTest(ruleName, test) {
   if (typeof test.warnings === 'number') {
     assert.equal(warnings.length, test.warnings, `Expected ${test.warnings} warnings, received ${warnings.length} warnings`)
   } else {
-    assert.deepEqual(warnings.map(x => x.text), test.warnings || [], 'warnings')
+    const warningTexts = warnings.map(x => x.text.replace(/\s*\(kaliber\/[^)]+\)$/, ''))
+    assert.deepEqual(warningTexts, test.warnings || [], 'warnings')
   }
 
-  assert.equal(results.output, test.output || '')
+  assert.equal(results.code ?? '', test.output || '')
 }
