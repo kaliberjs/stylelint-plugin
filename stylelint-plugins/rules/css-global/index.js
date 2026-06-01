@@ -1,4 +1,6 @@
 import { matchesFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const exclusiveToCssGlobal = {
   selectors: [':root'],
@@ -21,8 +23,14 @@ export const messages = {
     `move ${name} to \`reset.css\` or \`index.css\``,
 }
 
-export default {
+export default defineRule({
   ruleName: 'css-global',
+  meta: {
+    docs: {
+      description: 'Restrict :root, @custom-media, @custom-selector, and @value to the cssGlobal directory',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'layout-related-properties': {
       childAllowDecl: decl => isCustomProperty(decl)
@@ -36,7 +44,7 @@ export default {
       checkRules({ originalRoot, report })
     }
   }
-}
+})
 
 function isInCssGlobal(root) { return matchesFile(root, filename => filename.includes('/cssGlobal/')) }
 function isCustomProperty({ prop }) { return prop.startsWith('--') }

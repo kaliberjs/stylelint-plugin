@@ -1,4 +1,6 @@
 import { matchesFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const allowedInColorScheme = [
   'color', 'background-color', 'border-color',
@@ -12,8 +14,14 @@ export const messages = {
     `move the property to another file or use one of the advanced color values like #RRGGBBAA or color-mod(...)`
 }
 
-export default {
+export default defineRule({
   ruleName: 'color-schemes',
+  meta: {
+    docs: {
+      description: 'Only color-related properties are allowed in color scheme files',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'layout-related-properties': {
       childAllowCss: isColorScheme,
@@ -35,6 +43,6 @@ export default {
       })
     }
   }
-}
+})
 
 function isColorScheme(root) { return matchesFile(root, filename => /colorScheme.*\.css/.test(filename)) }

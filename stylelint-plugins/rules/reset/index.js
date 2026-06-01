@@ -1,5 +1,7 @@
 import { declMatches, parseSelector } from '../../machinery/ast.js'
 import { isFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const allowedInReset = [
   'width', 'height',
@@ -14,8 +16,14 @@ export const messages = {
     `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
-export default {
+export default defineRule({
   ruleName: 'reset',
+  meta: {
+    docs: {
+      description: 'Only tag selectors allowed in reset.css — no class selectors',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'layout-related-properties': {
       rootAllowDecl: decl => isReset(decl.root()) && declMatches(decl, allowedInReset),
@@ -39,7 +47,7 @@ export default {
       onlyTagSelectorsInReset({ root: modifiedRoot, report })
     }
   }
-}
+})
 
 function onlyTagSelectorsInReset({ root, report }) {
   if (!isReset(root)) return

@@ -1,4 +1,6 @@
 import { matchesFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'no import':
@@ -11,8 +13,14 @@ export const messages = {
     `you can only use @kaliber-scoped in locations that have been whitelisted by other rules.`
 }
 
-export default {
+export default defineRule({
   ruleName: 'at-rule-restrictions',
+  meta: {
+    docs: {
+      description: 'Restrict @import to entry files and @kaliber-scoped to whitelisted locations',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: null,
   cssRequirements: {
     // resolvedCustomProperties: true, TODO: add test case
@@ -27,7 +35,7 @@ export default {
       noKaliberScoped({ root: modifiedRoot, report, allowSpecificKaliberScoped })
     }
   }
-}
+})
 
 function noImport({ root, report, allowImport, allowSpecificImport }) {
   if (allowImport && allowImport(root)) return

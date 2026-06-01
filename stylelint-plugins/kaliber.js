@@ -46,11 +46,12 @@ function toStyleLintPlugins(...rules) {
   const ruleInteraction = determineRuleInteraction(rules)
   const ruleConfiguration = convertToConfiguration(ruleInteraction)
 
-  return rules.map(({ ruleName, cssRequirements, create }) =>
+  return rules.map(({ ruleName, cssRequirements, create, meta }) =>
     createPlugin({
       ...(cssRequirements || {}),
       ruleName: `kaliber/${ruleName}`,
       plugin: create(ruleConfiguration[ruleName] || {}),
+      meta,
     })
   )
 }
@@ -107,7 +108,7 @@ function convertToConfiguration(ruleInteraction) {
 }
 
 function createPlugin({
-  ruleName, plugin,
+  ruleName, plugin, meta,
   normalizedCss = false,
   resolvedCustomProperties = false,
   resolvedCustomMedia = false,
@@ -116,6 +117,7 @@ function createPlugin({
   resolvedCalc = false,
 }) {
   const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
+  if (meta) stylelintPlugin.meta = meta
 
   return stylelintPlugin
 

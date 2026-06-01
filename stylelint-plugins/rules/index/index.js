@@ -1,5 +1,7 @@
 import { parseSelector } from '../../machinery/ast.js'
 import { isFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'no class selectors': selector =>
@@ -11,8 +13,14 @@ export const messages = {
     `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
-export default {
+export default defineRule({
   ruleName: 'index',
+  meta: {
+    docs: {
+      description: 'Only tag selectors allowed in index.css — no class selectors',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'selector-policy': {
       tagSelectorsAllowCss: isIndex,
@@ -37,7 +45,7 @@ export default {
       onlyTagSelectorsInIndex({ root: modifiedRoot, report })
     }
   }
-}
+})
 
 function onlyTagSelectorsInIndex({ root, report }) {
   if (!isIndex(root)) return

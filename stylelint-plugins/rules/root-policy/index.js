@@ -4,6 +4,8 @@ import {
   getRootRules,
 } from '../../machinery/ast.js'
 import { checkRuleRelation } from '../../machinery/relations.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'root - z-index without position relative':
@@ -26,8 +28,14 @@ const rootCombos = {
   },
 }
 
-export default {
+export default defineRule({
   ruleName: 'root-policy',
+  meta: {
+    docs: {
+      description: 'Root-level z-index must create a valid stacking context with position: relative',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'layout-related-properties': {
       rootAllowDecl: decl => decl.prop === 'z-index',
@@ -46,7 +54,7 @@ export default {
       validStackingContextInRoot({ root: modifiedRoot, report })
     }
   }
-}
+})
 
 function validStackingContextInRoot({ root, report }) {
   withRootRules(root, rule => {

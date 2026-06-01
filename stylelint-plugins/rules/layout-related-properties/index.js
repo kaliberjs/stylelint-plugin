@@ -5,6 +5,8 @@ import {
   isPseudoElement,
 } from '../../machinery/ast.js'
 import { flexChildProps, gridChildProps, flexOrGridChildProps } from '../../machinery/css.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const intrinsicUnits = ['px', 'em', 'rem', 'vw', 'vh', 'dvw', 'dvh', 'svh', 'svw', 'lvh', 'lvw', 'ch']
 const intrinsicProps = ['width', 'height', 'max-width', 'min-width', 'max-height', 'min-height']
@@ -49,8 +51,14 @@ export const messages = {
     `move to another root rule`,
 }
 
-export default {
+export default defineRule({
   ruleName: 'layout-related-properties',
+  meta: {
+    docs: {
+      description: 'Layout properties (margin, position, z-index, etc.) belong in nested selectors, not root rules',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: null,
   cssRequirements: {
     normalizedCss: true,
@@ -74,7 +82,7 @@ export default {
       onlyLayoutRelatedPropsInNested({ modifiedRoot, report, childAllowCss, childAllowRule, childAllowDecl })
     }
   }
-}
+})
 
 function noLayoutRelatedPropsInRoot({ modifiedRoot, report, rootAllowRule, rootAllowDecl }) {
   withRootRules(modifiedRoot, rule => {

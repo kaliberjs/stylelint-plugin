@@ -3,6 +3,8 @@ import {
   withNestedRules,
   getRootRules,
 } from '../../machinery/ast.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const pseudoStates = [
   ':hover', ':active', ':focus', ':focus-within',
@@ -31,8 +33,14 @@ export const messages = {
     `remove the _root or component_root prefix`,
 }
 
-export default {
+export default defineRule({
   ruleName: 'naming-policy',
+  meta: {
+    docs: {
+      description: 'Enforce naming conventions for selectors, values, properties, and exports',
+      url: docsUrl(import.meta.dirname),
+    },
+  },
   ruleInteraction: {
     'layout-related-properties': {
       rootAllowRule: is_root,
@@ -61,7 +69,7 @@ export default {
       noRootInChildSelector({ modifiedRoot, report })
     }
   }
-}
+})
 
 function noComponentNameInNested({ modifiedRoot, report }) {
   withNestedRules(modifiedRoot, (rule, parent) => {
