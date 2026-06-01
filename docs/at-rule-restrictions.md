@@ -9,7 +9,6 @@ Restricts where `@import` at-rules can be used.
 For shared values like custom properties, place them in `src/cssGlobal/` instead.
 
 Other rules may allow specific imports:
-- **index** rule allows `@import` in `index.css` but only for fonts
 - **reset** rule does not currently allow any imports
 
 ### Examples
@@ -24,7 +23,7 @@ Examples of *correct* code:
 
 `index.css`:
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Inter');
+@import url('./fonts/inter.css');
 ```
 
 Examples of *incorrect* code:

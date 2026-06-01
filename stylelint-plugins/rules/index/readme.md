@@ -1,13 +1,12 @@
 # Index
 
-The file named `index.css` has a special meaning. It is meant to set domain specific defaults for html tags. It is typically imported as `import './index.css'` from a non-universal component.
+The file named `index.css` has a special meaning. It is meant to set domain specific defaults for html tags.
 
 The following applies to `index.css`:
 
 - Only tag selectors or `:global` class selectors (no normal class selectors)
-- Only `@import` when used to import `@font-face` declarations
 
-In essence, this file is used to define styles that should only be set once and apply to the whole application.
+Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css` or in a dedicated file in `cssGlobal/`.
 
 ## Examples
 
@@ -15,12 +14,16 @@ Examples of *correct* code for this rule:
 
 `index.css`
 ```css
-@import url('https://fonts.googleapis.com/css?family=Merriweather|Poppins:400,500,600');
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 html {
   box-sizing: border-box;
-
-  /* force scroll bar, so there's no ui-jank when opening/closing menu on windows */
   overflow-y: scroll;
 }
 
@@ -28,7 +31,6 @@ body {
   color: var(--color-gray-900);
   font-family: var(--font-family-base);
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-base-400);
   line-height: 1.7;
 }
 ```
@@ -37,8 +39,6 @@ Examples of *incorrect* code for this rule:
 
 `index.css`
 ```css
-@import './abc.css'
-
 .def {
   ...
 }

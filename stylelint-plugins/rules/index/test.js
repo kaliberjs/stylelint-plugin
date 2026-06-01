@@ -48,22 +48,5 @@ test('index', {
       },
     ],
     invalid: []
-  },
-  'at-rule-restrictions': {
-    valid: [
-      {
-        title: 'allow font @import in index.css',
-        filename: 'index.css',
-        code: `@import url('https://fonts.googleapis.com/css');`
-      },
-    ],
-    invalid: [
-      {
-        title: 'prevent non-font @import in index.css',
-        filename: 'index.css',
-        code: `@import 'x';`,
-        warnings: [messages['only import font']]
-      },
-    ]
-  },
+  }
 })

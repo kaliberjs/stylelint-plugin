@@ -7,8 +7,6 @@ export const messages = {
   'no class selectors': selector =>
     `Unexpected class selector '${selector}', only tag selectors are allowed in index.css - ` +
       `move the selector to another file or wrap it in \`:global(...)\``,
-  'only import font':
-    `Invalid @import value, you can only import fonts`,
 }
 
 export default defineRule({
@@ -20,12 +18,6 @@ export default defineRule({
   ruleInteraction: {
     'selector-policy': {
       tagSelectorsAllowCss: isIndex,
-    },
-    'at-rule-restrictions': {
-      allowSpecificImport: rule => isIndex(rule.root()) && (
-        rule.params.includes('font') ||
-        messages['only import font']
-      ),
     },
   },
   messages,

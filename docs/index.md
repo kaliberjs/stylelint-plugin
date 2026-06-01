@@ -1,9 +1,8 @@
 # Index
 
-The `index.css` file is for global tag-based styling and font imports. Class selectors are not allowed — use tag selectors instead or move class-based styles to component files.
+The `index.css` file is for global tag-based styling using tag selectors. Class selectors are not allowed — use tag selectors instead or move class-based styles to component files.
 
-This rule also controls what `@import` can do inside `index.css`:
-- `@import` is only allowed for fonts
+Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css` or in a separate file in `cssGlobal/`.
 
 ## Examples
 
@@ -11,16 +10,22 @@ Examples of *correct* code:
 
 `index.css`:
 ```css
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-size: 100%;
+}
+
 body {
-  margin: 0;
-  font-family: sans-serif;
+  font-family: var(--font-family-base);
+  line-height: 1.7;
 }
-
-a {
-  color: inherit;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter');
 ```
 
 Examples of *incorrect* code:
@@ -31,10 +36,4 @@ Examples of *incorrect* code:
 .component {
   color: red;
 }
-```
-
-`index.css`:
-```css
-/* only font imports are allowed */
-@import './reset.css';
 ```
