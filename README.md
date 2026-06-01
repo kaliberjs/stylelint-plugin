@@ -2,6 +2,14 @@
 
 Opinionated Stylelint plugin enforcing Kaliber's CSS conventions. Bundles custom rules that promote component-based CSS architecture where components are black boxes with clear boundaries between internal styling and layout positioning.
 
+## Installation
+
+```sh
+pnpm add @kaliber/stylelint-plugin
+```
+
+> **Requires** Node.js ≥ 20.19.0
+
 ## Usage
 
 Create a `.stylelintrc` file in your project root:
@@ -27,6 +35,8 @@ Create a `.stylelintrc` file in your project root:
 | [`at-rule-restrictions`](docs/at-rule-restrictions.md) | Restrict `@import` to entry files and `@kaliber-scoped` to whitelisted locations |
 | [`index`](docs/index.md) | Only tag selectors allowed in `index.css` — no class selectors |
 | [`reset`](docs/reset.md) | Only tag selectors allowed in `reset.css` — no class selectors |
+
+For a complete list of **all** active rules (custom, third-party, and core Stylelint), see [`rules-overview.md`](rules-overview.md).
 
 ## Documentation
 
@@ -106,14 +116,26 @@ If you override formatting rules, they've moved to the `@stylistic/` namespace. 
 See the [full list of moved rules](https://github.com/stylelint-stylistic/stylelint-stylistic).
 
 ## Tests
+
 > [!CAUTION]
 > When saving a 'bad' `.css` file, use <kbd>META + K + S</kbd> (save without formatting); 
 > some files (e.g. `bad/file.css`) are deliberately wrongly formatted, which your `onSave` will try to 'fix' (which it should not).
 
+```sh
+# Run all tests (integration + unit)
+pnpm test
+
+# Integration tests only
+pnpm test-integration
+
+# Unit tests only
+pnpm test-rules
+```
+
 ## Publishing
 
 ```sh
->> yarn publish
+>> pnpm publish
 >> git push
 >> git push --tags
 ```
