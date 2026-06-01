@@ -1,22 +1,10 @@
 # CSS global
 
-Certain CSS features are only meaningful when defined globally — custom properties on `:root`, `@custom-media`, `@custom-selector`, and `@value` declarations. This rule enforces that these features live in the `cssGlobal` directory and that the `cssGlobal` directory only contains these features.
+`:root` selectors — used for defining custom properties — are only meaningful when defined globally. This rule enforces that `:root` lives in the `cssGlobal` directory and that the `cssGlobal` directory only contains `:root` rules.
 
 This two-way enforcement prevents:
 - Scattered `:root` declarations across component files
 - Non-global features leaking into the global scope
-
-## What belongs in `cssGlobal/`
-
-| Feature | Allowed in `cssGlobal/` | Exclusive to `cssGlobal/` |
-|---|---|---|
-| `:root` | ✓ | ✓ |
-| `@custom-media` | ✓ | ✓ |
-| `@custom-selector` | ✓ | ✓ |
-| `@value` | ✓ | |
-| `:export` | ✓ | |
-
-Everything else (regular rules, other at-rules) is forbidden inside `cssGlobal/`.
 
 ## Interactions with other rules
 
@@ -31,8 +19,6 @@ Examples of *correct* code for this rule:
 :root {
   --color-primary: #0066cc;
 }
-
-@custom-media --viewport-small (max-width: 600px);
 ```
 
 `Component.css`:
@@ -50,12 +36,6 @@ Examples of *incorrect* code for this rule:
 :root {
   --color-primary: #0066cc;
 }
-```
-
-`Component.css`:
-```css
-/* @custom-media can only be used in cssGlobal */
-@custom-media --viewport-small (max-width: 600px);
 ```
 
 `src/cssGlobal/variables.css`:

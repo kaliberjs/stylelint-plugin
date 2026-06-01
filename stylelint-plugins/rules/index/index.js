@@ -9,8 +9,6 @@ export const messages = {
       `move the selector to another file or wrap it in \`:global(...)\``,
   'only import font':
     `Invalid @import value, you can only import fonts`,
-  'only scope custom element':
-    `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
 export default defineRule({
@@ -27,10 +25,6 @@ export default defineRule({
       allowSpecificImport: rule => isIndex(rule.root()) && (
         rule.params.includes('font') ||
         messages['only import font']
-      ),
-      allowSpecificKaliberScoped: rule => isIndex(rule.root()) && (
-        /[a-z]+(-[a-z]+)+/.test(rule.params) ||
-        messages['only scope custom element']
       ),
     },
   },

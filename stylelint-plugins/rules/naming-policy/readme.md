@@ -3,9 +3,7 @@
 In @kaliber/build we value convention over configuration. This rule helps to enforce this notion and tries to prevent accidental mistakes.
 
 - [Nested component name](#nested-component-name)
-- [@value starts with underscore](#value-starts-with-underscore)
 - [Property lower case](#property-lower-case)
-- [Prevent export collisions](#prevent-export-collisions)
 - [_root](#_root)
 - [State](#state)
 
@@ -83,29 +81,9 @@ Examples of *incorrect* code for this rule:
 }
 ```
 
-## @value starts with underscore
-
-To prevent accidental collisions of `@value` names with built-in variables we require the names of `@value` definitions start with an underscore: `@value _x: 10px;`.
-
-### Examples
-
-Examples of *correct* code for this rule:
-
-```css
-@value _column: 3;
-@value _wrap: break-word;
-```
-
-Examples of *incorrect* code for this rule:
-
-```css
-@value column: 3;
-@value wrap: break-word;
-```
-
 ## Property lower case
 
-We originally used the standard rule [property-case](https://stylelint.io/user-guide/rules/property-case) with the option `"lower"`. This rules however had no way to allow other casing in properties that were placed in `:export` rules.
+All CSS properties must be written in lowercase. Custom properties (`--*`) are excluded from this check.
 
 ### Examples
 
@@ -116,10 +94,6 @@ Examples of *correct* code for this rule:
   color: red;
   display: none;
 }
-
-:export {
-  myColor: green;
-}
 ```
 
 Examples of *incorrect* code for this rule:
@@ -128,36 +102,6 @@ Examples of *incorrect* code for this rule:
 .test {
   COLOR: red;
   Display: none;
-}
-```
-
-## Prevent export collisions
-
-In modular CSS all class names used in the file are exported. If you happen to export a declaration with the same name the behavior is undefined: it's unclear what would happen. To help you prevent this from happening we added this rule.
-
-### Examples
-
-Examples of *correct* code for this rule:
-
-```css
-.test1 {
-  ...
-}
-
-:export {
-  test2: red;
-}
-```
-
-Examples of *incorrect* code for this rule:
-
-```css
-.test {
-  ...
-}
-
-:export {
-  test: red;
 }
 ```
 

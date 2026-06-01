@@ -17,16 +17,8 @@ export const messages = {
     `illegal class name\n` +
     `\`${className}\` can not be used in nested selectors - ` +
     `remove \`component\` from the name`,
-  'value should start with underscore':
-    `Expected underscore \`_\`\n` +
-    `to prevent conflicts all values should start with an underscore - ` +
-    `prefix the value with an underscore or, if you want to export a value, use \`:export { ... }\``,
   'property lower case': (actual, expected) =>
     `Expected '${actual}' to be '${expected}'`,
-  'export collision':
-    `Detected export collision\n` +
-    `a class is exported with this exact name - ` +
-    `rename the export`,
   'no _root child selectors':
     `Unexpected _root selector\n` +
     `_root or component_root selectors can not be used as a child selector - ` +
@@ -60,9 +52,7 @@ export default defineRule({
   create(config) {
     return ({ originalRoot, modifiedRoot, report, context }) => {
       noComponentNameInNested({ modifiedRoot, report })
-      valueStartsWithUnderscore({ originalRoot, report })
       propertyLowerCase({ originalRoot, report, context })
-      preventExportCollisions({ originalRoot, report })
       noRootInChildSelector({ modifiedRoot, report })
     }
   }
@@ -78,13 +68,6 @@ function noComponentNameInNested({ modifiedRoot, report }) {
   })
 }
 
-function valueStartsWithUnderscore({ originalRoot, report }) {
-  originalRoot.walkAtRules('value', rule => {
-    if (rule.params.startsWith('_')) return
-
-    report(rule, messages['value should start with underscore'], 8)
-  })
-}
 
 function propertyLowerCase({ originalRoot, report, context }) {
   originalRoot.walkDecls(decl => {
@@ -95,7 +78,6 @@ function propertyLowerCase({ originalRoot, report, context }) {
     const expectedProp = prop.toLowerCase()
 
     if (prop === expectedProp) return
-    if (parent.type === 'rule' && parent.selector === ':export') return
     if (context.fix) {
       decl.prop = expectedProp
       return
@@ -105,19 +87,6 @@ function propertyLowerCase({ originalRoot, report, context }) {
   })
 }
 
-function preventExportCollisions({ originalRoot, report }) {
-  const classes = []
-  originalRoot.walkRules(rule => {
-    parseSelector(rule).walkClasses(x => { classes.push(x.value) })
-  })
-  originalRoot.walkRules(':export', rule => {
-    rule.each(node => {
-      if (node.type !== 'decl') return
-      if (!classes.includes(node.prop)) return
-      report(node, messages['export collision'])
-    })
-  })
-}
 
 function noRootInChildSelector({ modifiedRoot, report }) {
   withNestedRules(modifiedRoot, (rule, parent) => {

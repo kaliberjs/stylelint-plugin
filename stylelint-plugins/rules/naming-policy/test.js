@@ -8,21 +8,9 @@ test('naming-policy', {
     valid: [
       { code: '.componentGood { & > .test { } }' },
       { code: '.good { & > .test { } }' },
-      { code: `@value _abc: 0;` },
-      {
-        title: `don't crash on syntax`,
-        code: `
-          @value _height: 30px;
-
-          .inner {
-            border-radius: calc(_height / 2);
-          }
-        `,
-      },
       { code: 'a { }' },
       { code: 'a { display: block; }' },
       { code: ':root { --custom-PropertyName: red; }' },
-      { code: ':export { customPropertyName: red; }' },
       {
         code: 'a { Display: block; }',
         output: 'a { display: block; }',
@@ -30,24 +18,6 @@ test('naming-policy', {
       {
         code: ':root { customPropertyName: red; }',
         output: ':root { custompropertyname: red; }',
-      },
-      {
-        title: 'no collision',
-        code: `
-          .test1 { }
-          :export {
-            test2: 0;
-          }
-        `,
-      },
-      {
-        title: 'no collision - case difference',
-        code: `
-          .testit { }
-          :export {
-            testIt: 0;
-          }
-        `,
       },
       { code: `._rootGood { pointer-events: none; }` },
       { code: `.good { & ._root {} }` },
@@ -63,41 +33,12 @@ test('naming-policy', {
         warnings: [messages['nested - no component class name in nested']('componentTest')]
       },
       {
-        code: `@value abc: 0;`,
-        warnings: [messages['value should start with underscore']]
-      },
-      {
         code: 'a { Display: block; }',
         warnings: [messages['property lower case']('Display', 'display')],
       },
       {
         code: ':root { customPropertyName: red; }',
         warnings: [messages['property lower case']('customPropertyName', 'custompropertyname')],
-      },
-      {
-        title: 'obvious collision',
-        code: `
-          .test { }
-          :export {
-            test: 0;
-          }
-        `,
-        warnings: [messages['export collision']]
-      },
-      {
-        title: 'nested collisions',
-        code: `
-          .test1 {
-            & > .test2 { }
-            &.test3 > .test4 { }
-          }
-          :export {
-            test2: 0;
-            test3: 0;
-            test4: 0;
-          }
-        `,
-        warnings: Array(3).fill(messages['export collision'])
       },
       {
         code: `.bad { & > ._root { color: 0; } }`,

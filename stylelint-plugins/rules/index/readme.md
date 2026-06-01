@@ -9,32 +9,6 @@ The following applies to `index.css`:
 
 In essence, this file is used to define styles that should only be set once and apply to the whole application.
 
-
-## Scoping index styles
-
-In new projects you only need `index.css` file located at the root of your application. When you working on an older project you might need to add a new feature. In most cases it's not commercially viable to convert the whole project to a new style. In those case you can create a directory and start the new style from there.
-
-The `index.css` file contains tag selectors, so without scoping they would affect the whole project. To solve this we introduced the an @rule that allows you to scope all entries of the `index.css` file:
-
-```css
-@kaliber-scoped my-custom-element;
-
-div {
-  ...
-}
-```
-
-Results in:
-
-```css
-my-custom-element div {
-  ...
-}
-```
-
-We chose a custom element because it only adds 1 point of specificity, allow all of the other rules to remain unchanged.
-
-
 ## Examples
 
 Examples of *correct* code for this rule:

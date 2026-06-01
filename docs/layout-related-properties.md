@@ -8,24 +8,13 @@ Layout properties — margin, position, width, height, z-index, flex/grid child 
 
 ## Layout related properties
 
-These properties are considered layout-related and may only appear in nested selectors:
-
-- `z-index`
-- `width`, `height`, `max-width`, `min-width`, `max-height`, `min-height`
-- `position: absolute`, `position: fixed`
-- `top`, `right`, `bottom`, `left`, `inset`
-- `margin`, `margin-top`, `margin-right`, `margin-bottom`, `margin-left`
-- `margin-inline`, `margin-inline-start`, `margin-inline-end`
-- `margin-block`, `margin-block-start`, `margin-block-end`
-- `justify-self`, `align-self`, `place-self`
-- Flex child properties (`flex`, `flex-grow`, `flex-shrink`, `flex-basis`, `order`)
-- Grid child properties (`grid-column`, `grid-row`, `grid-area`, etc.)
+The full list of layout-related properties and their exact values is defined in [layout-related-properties/index.js](../stylelint-plugins/rules/layout-related-properties/index.js) (`layoutRelatedProps`). Flex/grid child properties are defined in [css.js](../stylelint-plugins/machinery/css.js).
 
 ### Exceptions
 
 - `position: relative` and `overflow` are safe in both root and nested rules
 - `display: none` is allowed everywhere
-- **Intrinsic sizing** — `width`/`height` with a unit like `px`, `em`, `rem`, `vw`, `vh`, `ch` and `!important` is treated as an intrinsic value and allowed in root rules
+- **Intrinsic sizing** — `width`/`height` with one of the [intrinsic units](../stylelint-plugins/rules/layout-related-properties/index.js) and `!important` is treated as an intrinsic value and allowed in root rules
 - **Ratio hack** — `height: 0` with a percentage `padding-bottom`/`padding-top` is allowed
 
 ## Examples
@@ -48,7 +37,6 @@ Examples of *correct* code for this rule:
 .component {
   position: relative; /* allowed in root */
   overflow: hidden;   /* allowed in root */
-  width: 300px !important; /* intrinsic sizing */
 }
 ```
 

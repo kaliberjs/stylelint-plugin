@@ -26,13 +26,13 @@ Create a `.stylelintrc` file in your project root:
 | Rule | Description |
 |---|---|
 | [`color-schemes`](docs/color-schemes.md) | Only color-related properties are allowed in color scheme files |
-| [`css-global`](docs/css-global.md) | Restrict `:root`, `@custom-media`, `@custom-selector`, and `@value` to the `cssGlobal` directory |
+| [`css-global`](docs/css-global.md) | Restrict `:root` to the `cssGlobal` directory |
 | [`layout-related-properties`](docs/layout-related-properties.md) | Layout properties (margin, position, z-index, etc.) belong in nested selectors, not root rules |
-| [`naming-policy`](docs/naming-policy.md) | Enforce naming conventions for selectors, values, properties, and exports |
+| [`naming-policy`](docs/naming-policy.md) | Enforce naming conventions for selectors and properties |
 | [`selector-policy`](docs/selector-policy.md) | Only direct child selectors, no double nesting, no tag selectors outside reset/index |
 | [`parent-child-policy`](docs/parent-child-policy.md) | Child properties require matching parent context (flex children need `display: flex`, etc.) |
 | [`root-policy`](docs/root-policy.md) | Root-level `z-index` must create a valid stacking context with `position: relative` |
-| [`at-rule-restrictions`](docs/at-rule-restrictions.md) | Restrict `@import` to entry files and `@kaliber-scoped` to whitelisted locations |
+| [`at-rule-restrictions`](docs/at-rule-restrictions.md) | Restrict `@import` to entry files |
 | [`index`](docs/index.md) | Only tag selectors allowed in `index.css` — no class selectors |
 | [`reset`](docs/reset.md) | Only tag selectors allowed in `reset.css` — no class selectors |
 
@@ -67,8 +67,6 @@ Rules lint against the **source CSS as written** — there is no PostCSS preproc
 - `padding-top: calc(9 / 16 * 100%)` → treated as potentially percentage ✅
 
 This is handled by the shared [`containsUnresolvable`](stylelint-plugins/machinery/ast.js) helper.
-
-> **Note:** CSS Modules `@value` tokens (e.g. `@value x: 10px`) are resolved at build time by esbuild, not by the linter. The linter cannot evaluate bare `@value` references.
 
 ### Adding documentation for a new rule
 

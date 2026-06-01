@@ -7,6 +7,13 @@
 - Added `"type": "module"` and `"exports"` field to `package.json`
 - Updated stylelint to v17
 
+### Removed
+- **`@value`** — removed `@value` underscore prefix enforcement from `naming-policy` and `@value` allowance from `css-global` (`@kaliber/build` v5 uses esbuild, which does not support `postcss-modules-values`)
+- **`:export`** — removed `:export` collision detection from `naming-policy`, removed `:export` allowance from `css-global`, and removed `:export` ignores from `property-no-unknown` and `selector-pseudo-class-no-unknown`
+- **`@custom-media`** / **`@custom-selector`** — removed from `css-global` exclusive enforcement (no longer processed by the build tool)
+- **`@kaliber-scoped`** — removed from `at-rule-restrictions`, `index`, and `reset` rules (custom PostCSS at-rule no longer supported); `at-rule-no-unknown` will now flag it as unknown
+- **`@value`** / **`@kaliber-scoped`** — removed from `at-rule-no-unknown` ignore list; these are now flagged as unknown at-rules
+
 ## 1.0.3 — 2025-10-29
 
 ### Added

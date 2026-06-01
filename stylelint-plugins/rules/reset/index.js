@@ -12,8 +12,6 @@ const allowedInReset = [
 export const messages = {
   'no class selectors': selector =>
     `Unexpected class selector '${selector}', only tag selectors are allowed in reset.css`,
-  'only scope custom element':
-    `Invalid @kaliber-scoped, you can only scope using custom elements`
 }
 
 export default defineRule({
@@ -28,12 +26,6 @@ export default defineRule({
     },
     'selector-policy': {
       tagSelectorsAllowCss: isReset
-    },
-    'at-rule-restrictions': {
-      allowSpecificKaliberScoped: rule => isReset(rule.root()) && (
-        /[a-z]+(-[a-z]+)+/.test(rule.params) ||
-        messages['only scope custom element']
-      ),
     },
   },
   messages,
