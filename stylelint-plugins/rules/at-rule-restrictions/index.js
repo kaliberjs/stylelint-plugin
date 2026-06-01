@@ -16,16 +16,10 @@ export const messages = {
 export default defineRule({
   ruleName: 'at-rule-restrictions',
   meta: {
-    docs: {
-      description: 'Restrict @import to entry files and @kaliber-scoped to whitelisted locations',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Restrict @import to entry files and @kaliber-scoped to whitelisted locations',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: null,
-  cssRequirements: {
-    // resolvedCustomProperties: true, TODO: add test case
-    // resolvedModuleValues: true, TODO: add test case
-  },
   messages,
   create({ allowSpecificImport, allowSpecificKaliberScoped }) {
     const allowImport = isEntryCss

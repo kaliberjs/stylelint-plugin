@@ -131,7 +131,63 @@ test('parent-child-policy', {
             }
           }
         `,
-      }
+      },
+      {
+        title: 'accept var() in parent display for flex children',
+        code: `
+          .good {
+            display: var(--layout);
+            & > .test { flex-grow: 1; }
+          }
+        `,
+      },
+      {
+        title: 'accept var() in parent display for grid children',
+        code: `
+          .good {
+            display: var(--layout);
+            & > .test { grid-column: 1; }
+          }
+        `,
+      },
+      {
+        title: 'accept var() in parent position for absolute children',
+        code: `
+          .good {
+            position: var(--pos);
+            & > .test { position: absolute; }
+          }
+        `,
+      },
+      {
+        title: 'accept var() in stacking context (position + z-index)',
+        code: `
+          .good {
+            position: var(--pos);
+            z-index: var(--z);
+            & > .test { z-index: 1; }
+          }
+        `,
+      },
+      {
+        title: 'accept calc() in z-index',
+        code: `
+          .good {
+            position: relative;
+            z-index: calc(var(--base-z) + 0);
+            & > .test { z-index: 1; }
+          }
+        `,
+      },
+      {
+        title: 'accept clamp() in parent display context',
+        code: `
+          .good {
+            display: var(--display-type);
+            & > .test { order: 1; }
+          }
+        `,
+      },
     ],
     invalid: [
       {

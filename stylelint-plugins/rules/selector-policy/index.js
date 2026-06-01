@@ -43,15 +43,10 @@ export const messages = {
 export default defineRule({
   ruleName: 'selector-policy',
   meta: {
-    docs: {
-      description: 'Only direct child selectors, no double nesting, no tag selectors outside reset/index',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Only direct child selectors, no double nesting, no tag selectors outside reset/index',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: null,
-  cssRequirements: {
-    // resolvedCustomSelectors: true, TODO: add test case
-  },
   messages,
   create({
     nonDirectChildSelectorsAllowCss,

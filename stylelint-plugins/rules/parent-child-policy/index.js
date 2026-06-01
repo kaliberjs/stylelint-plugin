@@ -104,10 +104,8 @@ const childParentRelations = {
 export default defineRule({
   ruleName: 'parent-child-policy',
   meta: {
-    docs: {
-      description: 'Child properties require matching parent context (flex children need display: flex, etc.)',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Child properties require matching parent context (flex children need display: flex, etc.)',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: {
     'layout-related-properties': {
@@ -116,10 +114,6 @@ export default defineRule({
   },
   cssRequirements: {
     normalizedCss: true,
-    // resolvedCustomProperties: true, TODO: add test case
-    // resolvedCustomMedia: true, TODO: add test case (probably only possible when we have added correct resolution for)
-    // resolvedCustomSelectors: true, TODO: add test case
-    // resolvedModuleValues: true, TODO: add test case
   },
   messages,
   create(config) {

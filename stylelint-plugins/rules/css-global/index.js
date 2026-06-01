@@ -26,10 +26,8 @@ export const messages = {
 export default defineRule({
   ruleName: 'css-global',
   meta: {
-    docs: {
-      description: 'Restrict :root, @custom-media, @custom-selector, and @value to the cssGlobal directory',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Restrict :root, @custom-media, @custom-selector, and @value to the cssGlobal directory',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: {
     'layout-related-properties': {

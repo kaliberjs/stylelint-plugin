@@ -36,10 +36,9 @@ export const messages = {
 export default defineRule({
   ruleName: 'naming-policy',
   meta: {
-    docs: {
-      description: 'Enforce naming conventions for selectors, values, properties, and exports',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Enforce naming conventions for selectors, values, properties, and exports',
+    url: docsUrl(import.meta.dirname),
+    fixable: true,
   },
   ruleInteraction: {
     'layout-related-properties': {
@@ -56,9 +55,7 @@ export default defineRule({
           selectorNameHasRootNameAsPrefix(rule)
     },
   },
-  cssRequirements: {
-    resolvedCustomSelectors: true,
-  },
+  cssRequirements: null,
   messages,
   create(config) {
     return ({ originalRoot, modifiedRoot, report, context }) => {

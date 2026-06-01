@@ -2,16 +2,11 @@ import type { Root, Declaration, Rule as PostCSSRule, AtRule, Node } from 'postc
 import type { RuleMeta, RuleMessages } from 'stylelint'
 
 // ---------------------------------------------------------------------------
-// CSS preprocessing flags — which PostCSS transforms to run before the rule
+// CSS preprocessing flags
 // ---------------------------------------------------------------------------
 
 export interface CSSRequirements {
   normalizedCss?: boolean
-  resolvedCustomProperties?: boolean
-  resolvedCustomMedia?: boolean
-  resolvedCustomSelectors?: boolean
-  resolvedModuleValues?: boolean
-  resolvedCalc?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -66,17 +61,11 @@ export interface PluginContext {
 }
 
 // ---------------------------------------------------------------------------
-// Meta — built by each rule using docsUrl
-//
-// Extends Stylelint's `RuleMeta` (url, deprecated?, fixable?) with a `docs`
-// namespace that adds `description` (not in Stylelint's types).
+// Meta — extends Stylelint's native RuleMeta with `description`
 // ---------------------------------------------------------------------------
 
-export interface KaliberRuleMeta extends Partial<RuleMeta> {
-  docs: {
-    description: string
-    url: string
-  }
+export interface KaliberRuleMeta extends RuleMeta {
+  description: string
 }
 
 // ---------------------------------------------------------------------------
@@ -89,7 +78,7 @@ export interface RuleDefinition<
 > {
   ruleName: string
   meta: KaliberRuleMeta
-  ruleInteraction: RuleInteraction | null
+  ruleInteraction?: RuleInteraction | null
   cssRequirements?: CSSRequirements | null
   messages: M
   create: (config: Config) => (ctx: PluginContext) => void

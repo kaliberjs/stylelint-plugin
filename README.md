@@ -48,6 +48,18 @@ Each rule exposes two pieces of metadata via `meta.docs`:
 
 The [`defineRule`](stylelint-plugins/machinery/defineRule.js) helper validates that every rule has the correct shape (`ruleName`, `meta`, `messages`, `create`). Type definitions are in [`defineRule.d.ts`](stylelint-plugins/machinery/defineRule.d.ts).
 
+### CSS value resolution
+
+Rules lint against the **source CSS as written** — there is no PostCSS preprocessing step. Values that can only be resolved at runtime (`var()`, `calc()`, `env()`) are treated as _potentially valid_ rather than flagged:
+
+- `width: var(--size) !important` → treated as potentially intrinsic ✅
+- `display: var(--layout)` with a flex child → parent treated as potentially flex ✅
+- `padding-top: calc(9 / 16 * 100%)` → treated as potentially percentage ✅
+
+This is handled by the shared [`containsUnresolvable`](stylelint-plugins/machinery/ast.js) helper.
+
+> **Note:** CSS Modules `@value` tokens (e.g. `@value x: 10px`) are resolved at build time by esbuild, not by the linter. The linter cannot evaluate bare `@value` references.
+
 ### Adding documentation for a new rule
 
 1. Create `docs/{rule-name}.md`
@@ -59,13 +71,9 @@ The [`defineRule`](stylelint-plugins/machinery/defineRule.js) helper validates t
    export default defineRule({
      ruleName: 'rule-name',
      meta: {
-       docs: {
-         description: 'One-line description of the rule',
-         url: docsUrl(import.meta.dirname),
-       },
+       description: 'One-line description of the rule',
+       url: docsUrl(import.meta.dirname),
      },
-     ruleInteraction: null,
-     cssRequirements: null,
      messages,
      create(config) {
        return ({ originalRoot, report }) => {

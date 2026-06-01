@@ -31,10 +31,8 @@ const rootCombos = {
 export default defineRule({
   ruleName: 'root-policy',
   meta: {
-    docs: {
-      description: 'Root-level z-index must create a valid stacking context with position: relative',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Root-level z-index must create a valid stacking context with position: relative',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: {
     'layout-related-properties': {
@@ -43,10 +41,6 @@ export default defineRule({
   },
   cssRequirements: {
     normalizedCss: true,
-    // resolvedCustomProperties: true, TODO: add test case
-    // resolvedCustomMedia: true, TODO: add test case (probably only possible when we have added correct resolution for)
-    // resolvedCustomSelectors: true, TODO: add test case
-    // resolvedModuleValues: true, TODO: add test case
   },
   messages,
   create(config) {

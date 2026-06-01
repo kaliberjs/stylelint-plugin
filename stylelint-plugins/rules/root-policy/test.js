@@ -49,6 +49,18 @@ test('root-policy', {
           }
         `,
       },
+      {
+        title: 'accept var() in z-index value',
+        code: '.good { position: relative; z-index: var(--z); }',
+      },
+      {
+        title: 'accept var() in position value',
+        code: '.good { position: var(--pos); z-index: 0; }',
+      },
+      {
+        title: 'accept calc() in z-index value',
+        code: '.good { position: relative; z-index: calc(var(--base) + 0); }',
+      },
     ],
     invalid: [
       {

@@ -1,4 +1,4 @@
-import { findDecls } from './ast.js'
+import { findDecls, containsUnresolvable } from './ast.js'
 
 export { checkRuleRelation }
 
@@ -31,6 +31,7 @@ function checkRuleRelation({ rule, triggerProperties, rulesToCheck, requiredProp
         if (!invalidDecl) return { result: 'missing', prop }
         if (!expectedValue) return
         const { value } = invalidDecl
+        if (containsUnresolvable(value)) return
         if (Array.isArray(expectedValue) && expectedValue.includes(value)) return
         if (value === expectedValue) return
         return { result: 'invalid', prop, invalidDecl, value, expectedValue }

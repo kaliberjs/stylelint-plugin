@@ -17,10 +17,8 @@ export const messages = {
 export default defineRule({
   ruleName: 'color-schemes',
   meta: {
-    docs: {
-      description: 'Only color-related properties are allowed in color scheme files',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Only color-related properties are allowed in color scheme files',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: {
     'layout-related-properties': {

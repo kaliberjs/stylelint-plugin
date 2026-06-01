@@ -16,10 +16,8 @@ export const messages = {
 export default defineRule({
   ruleName: 'index',
   meta: {
-    docs: {
-      description: 'Only tag selectors allowed in index.css — no class selectors',
-      url: docsUrl(import.meta.dirname),
-    },
+    description: 'Only tag selectors allowed in index.css — no class selectors',
+    url: docsUrl(import.meta.dirname),
   },
   ruleInteraction: {
     'selector-policy': {
@@ -35,9 +33,6 @@ export default defineRule({
         messages['only scope custom element']
       ),
     },
-  },
-  cssRequirements: {
-    // resolvedCustomSelectors: true, TODO: add test case
   },
   messages,
   create(config) {

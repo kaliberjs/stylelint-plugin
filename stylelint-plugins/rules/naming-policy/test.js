@@ -63,14 +63,6 @@ test('naming-policy', {
         warnings: [messages['nested - no component class name in nested']('componentTest')]
       },
       {
-        title: '└─ take custom selectors into account',
-        code: `
-          @custom-selector :--custom .componentTest;
-          .bad { @media x { & > :--custom { } } }
-        `,
-        warnings: [messages['nested - no component class name in nested']('componentTest')]
-      },
-      {
         code: `@value abc: 0;`,
         warnings: [messages['value should start with underscore']]
       },
