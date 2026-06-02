@@ -2,13 +2,13 @@
 
 The `index.css` file is for global tag-based styling using tag selectors. Class selectors are not allowed — use tag selectors instead or move class-based styles to component files.
 
-Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css` or in a separate file in `cssGlobal/`.
+Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css`, in a dedicated `fonts.css`, or in a file in `cssGlobal/`.
 
 ## Examples
 
 Examples of *correct* code:
 
-`index.css`:
+`fonts.css`:
 ```css
 @font-face {
   font-family: 'Inter';
@@ -17,7 +17,10 @@ Examples of *correct* code:
   font-style: normal;
   font-display: swap;
 }
+```
 
+`index.css`:
+```css
 html {
   font-size: 100%;
 }

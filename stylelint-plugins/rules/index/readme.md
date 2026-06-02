@@ -6,13 +6,13 @@ The following applies to `index.css`:
 
 - Only tag selectors or `:global` class selectors (no normal class selectors)
 
-Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css` or in a dedicated file in `cssGlobal/`.
+Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css`, in a dedicated `fonts.css`, or in a file in `cssGlobal/`.
 
 ## Examples
 
 Examples of *correct* code for this rule:
 
-`index.css`
+`fonts.css`
 ```css
 @font-face {
   font-family: 'Inter';
@@ -21,7 +21,10 @@ Examples of *correct* code for this rule:
   font-style: normal;
   font-display: swap;
 }
+```
 
+`index.css`
+```css
 html {
   box-sizing: border-box;
   overflow-y: scroll;
