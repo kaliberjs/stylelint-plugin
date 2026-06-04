@@ -1,14 +1,12 @@
-# @ rule restrictions
+# At-rule restrictions
 
-Certain @ rules have specific restrictions, this plugin manages those restrictions.
+Restricts where `@import` at-rules can be used.
 
 - [No import](#no-import)
 
 ## No import
 
-We prevent imports in CSS because they allow another way to tangle up your code. In a React application files can be brought in through JavaScript import statements. In plain html applications they are imported through the use of link tags. If we would allow CSS to use imports the dependencies and usage of certain pieces of code becomes hard to track. This can make it extremely hard to keep a mental model of the code.
-
-There is however an exception where we do allow imports. In a `*.entry.css` you are allowed to use imports. Since they are an entry level CSS file they are often used for the styling of a complete page. The file would become unmanageably big if we would not allow `@import`.
+`@import` is only allowed in `*.entry.css` files. Component CSS files should not import other CSS files — this leads to tight coupling and makes it hard to understand the dependency graph.
 
 ### How do I do ...
 
@@ -20,22 +18,20 @@ Another use of `@import` is to bring in font's. The `index` rule allows for this
 
 Examples of *correct* code for this rule:
 
-`abc.entry.css`
+`app.entry.css`:
 ```css
-@import './a.css';
-@import './b.css';
-@import './c.css';
+@import './reset.css';
+@import './index.css';
+```
+
+`index.css`:
+```css
+@import url('./fonts/inter.css');
 ```
 
 Examples of *incorrect* code for this rule:
 
-`notEntry.css`
+`Component.css`:
 ```css
-@import './a.css';
-@import './b.css';
-@import './c.css';
+@import './shared.css'; /* not allowed outside entry files */
 ```
-
-### Common refactorings
-
-...

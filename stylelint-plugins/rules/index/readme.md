@@ -1,10 +1,6 @@
 # Index
 
-The file named `index.css` has a special meaning. It is meant to set domain specific defaults for html tags.
-
-The following applies to `index.css`:
-
-- Only tag selectors or `:global` class selectors (no normal class selectors)
+The `index.css` file is for global tag-based styling using tag selectors. Class selectors are not allowed — use tag selectors or `:global` class selectors instead, or move class-based styles to component files.
 
 Fonts should be self-hosted using `@font-face` declarations — either inline in `index.css`, in a dedicated `fonts.css`, or in a file in `cssGlobal/`.
 
@@ -12,7 +8,7 @@ Fonts should be self-hosted using `@font-face` declarations — either inline in
 
 Examples of *correct* code for this rule:
 
-`fonts.css`
+`fonts.css`:
 ```css
 @font-face {
   font-family: 'Inter';
@@ -23,11 +19,11 @@ Examples of *correct* code for this rule:
 }
 ```
 
-`index.css`
+`index.css`:
 ```css
 html {
   box-sizing: border-box;
-  overflow-y: scroll;
+  font-size: 100%;
 }
 
 body {
@@ -40,10 +36,11 @@ body {
 
 Examples of *incorrect* code for this rule:
 
-`index.css`
+`index.css`:
 ```css
-.def {
-  ...
+/* class selectors are not allowed in index.css */
+.component {
+  color: red;
 }
 ```
 

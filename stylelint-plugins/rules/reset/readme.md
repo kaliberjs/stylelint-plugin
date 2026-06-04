@@ -1,21 +1,14 @@
 # Reset
 
-The file named `reset.css` has a special meaning. It is meant to reset browser defaults for html tags. It is typically imported like as `import 'reset.css'` from a non-universal component.
+The `reset.css` file is for resetting browser default styles using tag selectors. Class selectors are not allowed — even when wrapped in `:global(...)`.
 
-The following applies to `reset.css`:
+It is typically imported as `import 'reset.css'` from a non-universal component.
 
-- Only tag selectors (no normal class selectors)
-- Allows specific layout related properties normally not allowed in root rules
+Certain layout properties that are normally forbidden in root rules are allowed in `reset.css` because resets often need to set default dimensions and margins on elements:
 
-In essence, this file is used to reset styles set by the browser and that should only be set once.
-
-Allowed layout related properties:
-
-```js
-  width, height,
-  max-width, max-height,
-  margin, margin-top, margin-right, margin-bottom, margin-left,
-```
+- `width`, `height`
+- `max-width`, `max-height`
+- `margin`, `margin-top`, `margin-right`, `margin-bottom`, `margin-left`
 
 ## Scoping index styles
 
@@ -25,12 +18,21 @@ See [the documentation of `index.css`](../index) for details.
 
 Examples of *correct* code for this rule:
 
-`reset.css`
+`reset.css`:
 ```css
 *,
 *::before,
 *::after {
   margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 address { font-style: normal; }
@@ -46,17 +48,18 @@ button {
 
 Examples of *incorrect* code for this rule:
 
-`reset.css`
+`reset.css`:
 ```css
-.abc {
-  ...
-}
-
-:global(.abc) {
-  ...
+/* class selectors are not allowed in reset.css */
+.container {
+  width: 100%;
 }
 ```
 
-## Common refactorings
-
-...
+`reset.css`:
+```css
+/* :global() class selectors are also not allowed */
+:global(.container) {
+  width: 100%;
+}
+```

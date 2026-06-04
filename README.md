@@ -25,30 +25,26 @@ Create a `.stylelintrc` file in your project root:
 
 | Rule | Description |
 |---|---|
-| [`color-schemes`](docs/color-schemes.md) | Only color-related properties are allowed in color scheme files |
-| [`css-global`](docs/css-global.md) | Restrict `:root` to the `cssGlobal` directory |
-| [`layout-related-properties`](docs/layout-related-properties.md) | Layout properties (margin, position, z-index, etc.) belong in nested selectors, not root rules |
-| [`naming-policy`](docs/naming-policy.md) | Enforce naming conventions for selectors and properties |
-| [`selector-policy`](docs/selector-policy.md) | Only direct child selectors, no double nesting, no tag selectors outside reset/index |
-| [`parent-child-policy`](docs/parent-child-policy.md) | Child properties require matching parent context (flex children need `display: flex`, etc.) |
-| [`root-policy`](docs/root-policy.md) | Root-level `z-index` must create a valid stacking context with `position: relative` |
-| [`at-rule-restrictions`](docs/at-rule-restrictions.md) | Restrict `@import` to entry files |
-| [`index`](docs/index.md) | Only tag selectors allowed in `index.css` — no class selectors |
-| [`reset`](docs/reset.md) | Only tag selectors allowed in `reset.css` — no class selectors |
+| [`color-schemes`](stylelint-plugins/rules/color-schemes/readme.md) | Only color-related properties are allowed in color scheme files |
+| [`css-global`](stylelint-plugins/rules/css-global/readme.md) | Restrict `:root` to the `cssGlobal` directory |
+| [`layout-related-properties`](stylelint-plugins/rules/layout-related-properties/readme.md) | Layout properties (margin, position, z-index, etc.) belong in nested selectors, not root rules |
+| [`naming-policy`](stylelint-plugins/rules/naming-policy/readme.md) | Enforce naming conventions for selectors and properties |
+| [`selector-policy`](stylelint-plugins/rules/selector-policy/readme.md) | Only direct child selectors, no double nesting, no tag selectors outside reset/index |
+| [`parent-child-policy`](stylelint-plugins/rules/parent-child-policy/readme.md) | Child properties require matching parent context (flex children need `display: flex`, etc.) |
+| [`root-policy`](stylelint-plugins/rules/root-policy/readme.md) | Root-level `z-index` must create a valid stacking context with `position: relative` |
+| [`at-rule-restrictions`](stylelint-plugins/rules/at-rule-restrictions/readme.md) | Restrict `@import` to entry files |
+| [`index`](stylelint-plugins/rules/index/readme.md) | Only tag selectors allowed in `index.css` — no class selectors |
+| [`reset`](stylelint-plugins/rules/reset/readme.md) | Only tag selectors allowed in `reset.css` — no class selectors |
 
 For a complete list of **all** active rules (custom, third-party, and core Stylelint), see [`rules-overview.md`](rules-overview.md).
 
 ## Documentation
 
-Rule documentation lives in [`docs/`](docs/). Each rule has a corresponding markdown file explaining what it enforces, why, and showing valid/invalid examples.
-
-### Convention
-
-The doc filename **must match the rule's directory name** under `rules/`. The [`docsUrl`](stylelint-plugins/machinery/docsUrl.js) helper derives the documentation path from the rule's directory:
+Each rule has a colocated `readme.md` explaining what it enforces, why, and showing valid/invalid examples. The [`docsUrl`](stylelint-plugins/machinery/docsUrl.js) helper resolves the documentation path from the rule's directory:
 
 ```
-rules/color-schemes/index.js    →  docs/color-schemes.md
-rules/naming-policy/index.js    →  docs/naming-policy.md
+rules/color-schemes/index.js    →  rules/color-schemes/readme.md
+rules/naming-policy/index.js    →  rules/naming-policy/readme.md
 ```
 
 Each rule exposes two pieces of metadata via `meta.docs`:
@@ -70,7 +66,7 @@ This is handled by the shared [`containsUnresolvable`](stylelint-plugins/machine
 
 ### Adding documentation for a new rule
 
-1. Create `docs/{rule-name}.md`
+1. Create `rules/{rule-name}/readme.md`
 2. In the rule's `index.js`, use `defineRule`:
    ```js
    import defineRule from '../../machinery/defineRule.js'
