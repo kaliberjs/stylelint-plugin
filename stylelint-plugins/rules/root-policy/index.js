@@ -33,6 +33,7 @@ export default defineRule({
   meta: {
     description: 'Root-level z-index must create a valid stacking context with position: relative',
     url: docsUrl(import.meta.dirname),
+    fixable: true,
   },
   ruleInteraction: {
     'layout-related-properties': {
@@ -45,19 +46,25 @@ export default defineRule({
   messages,
   create(config) {
     return ({ originalRoot, modifiedRoot, report, context }) => {
-      validStackingContextInRoot({ root: modifiedRoot, report })
+      validStackingContextInRoot({ root: modifiedRoot, report, context })
     }
   }
 })
 
-function validStackingContextInRoot({ root, report }) {
+function validStackingContextInRoot({ root, report, context }) {
   withRootRules(root, rule => {
 
     const result = checkRootCombo(rule, rootCombos.validStackingContext)
 
-    result.forEach(({ result, prop, triggerDecl, rootDecl, value, expectedValue }) => {
+    result.forEach(({ result, prop, triggerDecl, invalidDecl, value, expectedValue }) => {
       if (prop === 'position') report(triggerDecl, messages['root - z-index without position relative'])
-      if (prop === 'z-index') report(triggerDecl, messages['root - z-index not 0'])
+      if (prop === 'z-index') {
+        if (context.fix) {
+          invalidDecl.value = expectedValue
+          return
+        }
+        report(triggerDecl, messages['root - z-index not 0'])
+      }
     })
   })
 }

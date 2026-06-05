@@ -61,6 +61,16 @@ test('root-policy', {
         title: 'accept calc() in z-index value',
         code: '.good { position: relative; z-index: calc(var(--base) + 0); }',
       },
+      {
+        title: 'fix z-index to 0',
+        code: '.good { position: relative; z-index: 1; }',
+        output: '.good { position: relative; z-index: 0; }',
+      },
+      {
+        title: 'fix z-index to 0 (negative value)',
+        code: '.good { position: relative; z-index: -1; }',
+        output: '.good { position: relative; z-index: 0; }',
+      },
     ],
     invalid: [
       {
