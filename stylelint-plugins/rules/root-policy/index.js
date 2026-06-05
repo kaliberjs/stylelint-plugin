@@ -46,12 +46,12 @@ export default defineRule({
   messages,
   create(config) {
     return ({ originalRoot, modifiedRoot, report, context }) => {
-      validStackingContextInRoot({ root: modifiedRoot, report, context })
+      validStackingContextInRoot({ root: modifiedRoot, originalRoot, report, context })
     }
   }
 })
 
-function validStackingContextInRoot({ root, report, context }) {
+function validStackingContextInRoot({ root, originalRoot, report, context }) {
   withRootRules(root, rule => {
 
     const result = checkRootCombo(rule, rootCombos.validStackingContext)
@@ -60,12 +60,21 @@ function validStackingContextInRoot({ root, report, context }) {
       if (prop === 'position') report(triggerDecl, messages['root - z-index without position relative'])
       if (prop === 'z-index') {
         if (context.fix) {
-          invalidDecl.value = expectedValue
+          fixDeclInOriginal(originalRoot, invalidDecl, expectedValue)
           return
         }
         report(triggerDecl, messages['root - z-index not 0'])
       }
     })
+  })
+}
+
+function fixDeclInOriginal(originalRoot, clonedDecl, expectedValue) {
+  const { source } = clonedDecl
+  originalRoot.walkDecls(clonedDecl.prop, decl => {
+    if (decl.source?.start?.offset === source?.start?.offset) {
+      decl.value = expectedValue
+    }
   })
 }
 
