@@ -1,15 +1,15 @@
 .test-nesting {
-  padding: 0;
+  transform: translate(1, 1, 2) scale(3);
   width: 1px !important;
+  padding: 0;
+  padding-right: 0.1px;
   padding-left: 0;
   font-family: serif;
-  transform: translate(1, 1, 2) scale(3);
   background: linear-gradient(to top, var(--color)/3, #000);
   background-size:
     0,
     0;
   background-size: 0, 0;
-  padding-right: 0.1px;
 
   &::after { margin: 0; }
 
@@ -44,8 +44,8 @@
 
 .test1,
 .test2:not(.test)::before {
-  padding: 0;
   content: '\n';
+  padding: 0;
 }
 
 .testA,
