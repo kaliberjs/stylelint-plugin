@@ -1,20 +1,9 @@
 import type { Root, Declaration, Rule as PostCSSRule, AtRule, Node } from 'postcss'
 import type { RuleMeta, RuleMessages } from 'stylelint'
 
-// ---------------------------------------------------------------------------
-// CSS preprocessing flags
-// ---------------------------------------------------------------------------
-
 export interface CSSRequirements {
   normalizedCss?: boolean
 }
-
-// ---------------------------------------------------------------------------
-// Rule interaction — cross-rule predicate callbacks
-//
-// Each key is a target rule name. The value is a bag of predicate callbacks
-// that the target rule reads from its merged `config` argument.
-// ---------------------------------------------------------------------------
 
 /** Predicate receiving a PostCSS Root (the entire file AST). */
 type CSSPredicate = (root: Root) => boolean
@@ -49,10 +38,6 @@ export interface RuleInteractionCallbacks {
 /** Map from target rule name → interaction callbacks. */
 export type RuleInteraction = Record<string, RuleInteractionCallbacks>
 
-// ---------------------------------------------------------------------------
-// Plugin context — passed into the function returned by `create`
-// ---------------------------------------------------------------------------
-
 export interface PluginContext {
   originalRoot: Root
   modifiedRoot: Root
@@ -60,17 +45,9 @@ export interface PluginContext {
   context: { fix?: boolean }
 }
 
-// ---------------------------------------------------------------------------
-// Meta — extends Stylelint's native RuleMeta with `description`
-// ---------------------------------------------------------------------------
-
 export interface KaliberRuleMeta extends RuleMeta {
   description: string
 }
-
-// ---------------------------------------------------------------------------
-// Rule definition — input/output of `defineRule`
-// ---------------------------------------------------------------------------
 
 export interface RuleDefinition<
   M extends RuleMessages = RuleMessages,
@@ -83,9 +60,5 @@ export interface RuleDefinition<
   messages: M
   create: (config: Config) => (ctx: PluginContext) => void
 }
-
-// ---------------------------------------------------------------------------
-// defineRule — validates shape and returns the rule as-is
-// ---------------------------------------------------------------------------
 
 export default function defineRule<D extends RuleDefinition>(rule: D): D
