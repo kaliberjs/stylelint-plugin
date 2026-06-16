@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 export default function docsUrl(ruleDir) {
-  return `file://${resolve(ruleDir, 'readme.md')}`
+  return pathToFileURL(resolve(ruleDir, 'readme.md')).href
 }
