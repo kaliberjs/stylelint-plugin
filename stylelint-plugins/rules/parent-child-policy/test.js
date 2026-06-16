@@ -180,7 +180,7 @@ test('parent-child-policy', {
         `,
       },
       {
-        title: 'accept clamp() in parent display context',
+        title: 'accept var() in parent display context',
         code: `
           .good {
             display: var(--display-type);

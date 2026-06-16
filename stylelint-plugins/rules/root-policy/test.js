@@ -71,6 +71,16 @@ test('root-policy', {
         code: '.good { position: relative; z-index: -1; }',
         output: '.good { position: relative; z-index: 0; }',
       },
+      {
+        title: 'fix z-index to 0 inside @media',
+        code: `.good { @media x { position: relative; z-index: 2; } }`,
+        output: `.good { @media x { position: relative; z-index: 0; } }`,
+      },
+      {
+        title: 'fix z-index to 0 inside class chaining',
+        code: `.good { &.test { position: relative; z-index: 3; } }`,
+        output: `.good { &.test { position: relative; z-index: 0; } }`,
+      },
     ],
     invalid: [
       {

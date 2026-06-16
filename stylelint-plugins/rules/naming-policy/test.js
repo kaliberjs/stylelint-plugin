@@ -19,6 +19,16 @@ test('naming-policy', {
         code: ':root { customPropertyName: red; }',
         output: ':root { custompropertyname: red; }',
       },
+      {
+        title: 'fix multiple uppercase properties in one rule',
+        code: 'a { Display: block; Color: red; }',
+        output: 'a { display: block; color: red; }',
+      },
+      {
+        title: 'fix uppercase property in nested rule',
+        code: '.test { & > .child { Display: block; } }',
+        output: '.test { & > .child { display: block; } }',
+      },
       { code: `._rootGood { pointer-events: none; }` },
       { code: `.good { & ._root {} }` },
     ],
