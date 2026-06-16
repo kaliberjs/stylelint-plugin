@@ -105,10 +105,9 @@ function createPlugin({
   ruleName, plugin, meta,
   normalizedCss = false,
 }) {
-  const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
-  if (meta) stylelintPlugin.meta = meta
+  if (meta) pluginWrapper.meta = meta
 
-  return stylelintPlugin
+  return stylelint.createPlugin(ruleName, pluginWrapper)
 
   function pluginWrapper(primaryOption, secondaryOptionObject, context) {
     return async (originalRoot, result) => {
