@@ -9,6 +9,7 @@ const problems = new Set([
   'kaliber/index',
   'kaliber/layout-related-properties',
   'kaliber/naming-policy',
+  'kaliber/property-order',
   'kaliber/at-rule-restrictions',
   'kaliber/parent-child-policy',
   'kaliber/reset',

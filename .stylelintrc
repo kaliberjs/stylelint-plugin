@@ -11,6 +11,7 @@
     "kaliber/index": true,
     "kaliber/layout-related-properties": true,
     "kaliber/naming-policy": true,
+    "kaliber/property-order": true,
     "kaliber/at-rule-restrictions": true,
     "kaliber/parent-child-policy": true,
     "kaliber/reset": true,

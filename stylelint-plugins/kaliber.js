@@ -4,6 +4,7 @@ import colorSchemes from './rules/color-schemes/index.js'
 import cssGlobal from './rules/css-global/index.js'
 import layoutRelatedProperties from './rules/layout-related-properties/index.js'
 import namingPolicy from './rules/naming-policy/index.js'
+import propertyOrder from './rules/property-order/index.js'
 import selectorPolicy from './rules/selector-policy/index.js'
 import parentChildPolicy from './rules/parent-child-policy/index.js'
 import rootPolicy from './rules/root-policy/index.js'
@@ -27,6 +28,7 @@ const rules = toStyleLintPlugins(
   cssGlobal,
   layoutRelatedProperties,
   namingPolicy,
+  propertyOrder,
   selectorPolicy,
   parentChildPolicy,
   rootPolicy,
