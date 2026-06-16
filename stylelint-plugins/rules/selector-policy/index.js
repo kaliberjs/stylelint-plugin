@@ -4,6 +4,8 @@ import {
   isRoot, hasChildSelector,
   getParentRule, getChildSelectors, getRootRules,
 } from '../../machinery/ast.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'only direct child selectors': type =>
@@ -38,12 +40,13 @@ export const messages = {
     'change the selector to `*:checked +`'
 }
 
-export default {
+export default defineRule({
   ruleName: 'selector-policy',
-  ruleInteraction: null,
-  cssRequirements: {
-    // resolvedCustomSelectors: true, TODO: add test case
+  meta: {
+    description: 'Only direct child selectors, no double nesting, no tag selectors outside reset/index',
+    url: docsUrl(import.meta.dirname),
   },
+  ruleInteraction: null,
   messages,
   create({
     nonDirectChildSelectorsAllowCss,
@@ -60,7 +63,7 @@ export default {
       noRulesInsideMedia({ root: originalRoot, report })
     }
   }
-}
+})
 
 function onlyDirectChildSelectors({ root, report, nonDirectChildSelectorsAllowCss }) {
   if (nonDirectChildSelectorsAllowCss && nonDirectChildSelectorsAllowCss(root)) return

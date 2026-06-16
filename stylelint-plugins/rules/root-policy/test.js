@@ -49,6 +49,38 @@ test('root-policy', {
           }
         `,
       },
+      {
+        title: 'accept var() in z-index value',
+        code: '.good { position: relative; z-index: var(--z); }',
+      },
+      {
+        title: 'accept var() in position value',
+        code: '.good { position: var(--pos); z-index: 0; }',
+      },
+      {
+        title: 'accept calc() in z-index value',
+        code: '.good { position: relative; z-index: calc(var(--base) + 0); }',
+      },
+      {
+        title: 'fix z-index to 0',
+        code: '.good { position: relative; z-index: 1; }',
+        output: '.good { position: relative; z-index: 0; }',
+      },
+      {
+        title: 'fix z-index to 0 (negative value)',
+        code: '.good { position: relative; z-index: -1; }',
+        output: '.good { position: relative; z-index: 0; }',
+      },
+      {
+        title: 'fix z-index to 0 inside @media',
+        code: `.good { @media x { position: relative; z-index: 2; } }`,
+        output: `.good { @media x { position: relative; z-index: 0; } }`,
+      },
+      {
+        title: 'fix z-index to 0 inside class chaining',
+        code: `.good { &.test { position: relative; z-index: 3; } }`,
+        output: `.good { &.test { position: relative; z-index: 0; } }`,
+      },
     ],
     invalid: [
       {

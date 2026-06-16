@@ -10,6 +10,7 @@ export {
   isPseudoElement, isRoot, hasChildSelector,
   getParentRule, getChildSelectors, getRootRules,
   getNormalizedRoots,
+  containsUnresolvable,
 }
 
 function withRootRules(root, f) {
@@ -98,7 +99,15 @@ function normalize(targets) {
 function invalidTarget(targets, { prop, value }) {
   const hasProp = targets.hasOwnProperty(prop)
   const targetValue = targets[prop]
-  return !hasProp || (!!targetValue.length && !targetValue.includes(value))
+  if (!hasProp) return true
+  if (!targetValue.length) return false
+  if (containsUnresolvable(value)) return false
+  return !targetValue.includes(value)
+}
+
+const unresolvable = ['var(', 'calc(', 'env(', 'min(', 'max(', 'clamp(']
+function containsUnresolvable(value) {
+  return unresolvable.some(fn => value.includes(fn))
 }
 
 /*

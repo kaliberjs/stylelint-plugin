@@ -1,13 +1,10 @@
 import { matchesFile } from '../../machinery/filename.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const exclusiveToCssGlobal = {
   selectors: [':root'],
-  atRules: ['custom-media', 'custom-selector'],
-}
-
-const allowedInCssGlobal = {
-  selectors: [':export'],
-  atRules: ['value'],
+  atRules: [],
 }
 
 export const messages = {
@@ -17,12 +14,16 @@ export const messages = {
     `move ${name} to to the \`cssGlobal\` directory`,
   'only': name =>
     `Unexpected ${name}\n` +
-    `only @custom-selector, @custom-media, @value, :export and :root are allowed in the \`cssGlobal\` directory - ` +
+    `only :root is allowed in the \`cssGlobal\` directory - ` +
     `move ${name} to \`reset.css\` or \`index.css\``,
 }
 
-export default {
+export default defineRule({
   ruleName: 'css-global',
+  meta: {
+    description: 'Restrict :root to the cssGlobal directory',
+    url: docsUrl(import.meta.dirname),
+  },
   ruleInteraction: {
     'layout-related-properties': {
       childAllowDecl: decl => isCustomProperty(decl)
@@ -36,7 +37,7 @@ export default {
       checkRules({ originalRoot, report })
     }
   }
-}
+})
 
 function isInCssGlobal(root) { return matchesFile(root, filename => filename.includes('/cssGlobal/')) }
 function isCustomProperty({ prop }) { return prop.startsWith('--') }
@@ -46,10 +47,9 @@ function checkAtRules({ originalRoot, report }) {
   originalRoot.walkAtRules(rule => {
     const { name } = rule
     const exclusive = exclusiveToCssGlobal.atRules.includes(name)
-    const allowed = exclusive || allowedInCssGlobal.atRules.includes(name)
 
     if (!inCssGlobal && exclusive) report(rule, messages['no'](`@${name}`))
-    if (inCssGlobal && !allowed) report(rule, messages['only'](`@${name}`))
+    if (inCssGlobal && !exclusive) report(rule, messages['only'](`@${name}`))
   })
 }
 
@@ -58,9 +58,8 @@ function checkRules({ originalRoot, report }) {
   originalRoot.walkRules(rule => {
     const { selector } = rule
     const exclusive = exclusiveToCssGlobal.selectors.includes(selector)
-    const allowed = exclusive || allowedInCssGlobal.selectors.includes(selector)
 
     if (!inCssGlobal && exclusive) report(rule, messages['no'](selector))
-    if (inCssGlobal && !allowed) report(rule, messages['only'](selector))
+    if (inCssGlobal && !exclusive) report(rule, messages['only'](selector))
   })
 }

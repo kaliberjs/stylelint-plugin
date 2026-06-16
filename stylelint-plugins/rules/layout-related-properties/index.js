@@ -3,8 +3,11 @@ import {
   parseValue, parseSelector,
   withRootRules, withNestedRules,
   isPseudoElement,
+  containsUnresolvable,
 } from '../../machinery/ast.js'
 import { flexChildProps, gridChildProps, flexOrGridChildProps } from '../../machinery/css.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 const intrinsicUnits = ['px', 'em', 'rem', 'vw', 'vh', 'dvw', 'dvh', 'svh', 'svw', 'lvh', 'lvw', 'ch']
 const intrinsicProps = ['width', 'height', 'max-width', 'min-width', 'max-height', 'min-height']
@@ -49,16 +52,15 @@ export const messages = {
     `move to another root rule`,
 }
 
-export default {
+export default defineRule({
   ruleName: 'layout-related-properties',
+  meta: {
+    description: 'Layout properties (margin, position, z-index, etc.) belong in nested selectors, not root rules',
+    url: docsUrl(import.meta.dirname),
+  },
   ruleInteraction: null,
   cssRequirements: {
     normalizedCss: true,
-    resolvedCustomProperties: true,
-    // resolvedCustomMedia: true, TODO: add test case (probably only possible when we have added correct resolution for)
-    // resolvedCustomSelectors: true, TODO: add test case
-    resolvedModuleValues: true,
-    resolvedCalc: true,
   },
   messages,
   create({
@@ -74,7 +76,7 @@ export default {
       onlyLayoutRelatedPropsInNested({ modifiedRoot, report, childAllowCss, childAllowRule, childAllowDecl })
     }
   }
-}
+})
 
 function noLayoutRelatedPropsInRoot({ modifiedRoot, report, rootAllowRule, rootAllowDecl }) {
   withRootRules(modifiedRoot, rule => {
@@ -111,8 +113,10 @@ function onlyLayoutRelatedPropsInNested({ modifiedRoot, report, childAllowCss, c
 }
 
 function isIntrinsicValue({ important, value }) {
+  if (!important) return false
+  if (containsUnresolvable(value)) return true
   const number = parseValue(value).nodes.find(x => x.type === 'numeric')
-  return important && number && intrinsicUnits.includes(number.unit)
+  return number && intrinsicUnits.includes(number.unit)
 }
 
 function isRatioHack({ prop, value }, rule) {
@@ -124,6 +128,7 @@ function isRatioHack({ prop, value }, rule) {
   }
 
   function isPercentage({ value }) {
+    if (containsUnresolvable(value)) return true
     const number = parseValue(value).nodes.find(x => x.type === 'numeric')
     return number && number.unit === '%'
   }

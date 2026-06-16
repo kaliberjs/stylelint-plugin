@@ -1,14 +1,10 @@
 # Layout related properties
 
-In CSS we make distinction between 2 kinds of properties: layout related and non-layout related. A few examples:
+Layout properties — margin, position, width, height, z-index, flex/grid child properties — control how an element is positioned within its parent. This rule enforces a strict separation between a component's own styling (root rules) and how it positions its children (nested rules).
 
-> Layout related: `margin`, `position: absolute`, `...`
+**Root rules** define what a component looks like internally. They should not contain layout properties because the component doesn't know how it will be positioned — that's the parent's job.
 
-> Non-layout related: `padding`, `color`, `...`
-
-Layout related properties affect the 'environment' of the element. In other words: layout related properties affect the outside of the component where non-layout related properties affect the inside.
-
-To prevent accidental problems, help with the portability and supplement the component (black-box) mindset this rule helps to enforce that layout related properties are only set in the presence of a parent.
+**Nested rules** (child selectors) define how children are positioned within a root rule. They should *only* contain layout properties. Non-layout properties in nested selectors usually mean the CSS should be restructured into its own root rule.
 
 Concretely, the following should be refactored as shown:
 
@@ -110,9 +106,32 @@ Pseudo elements are always child elements, but since they only exist in the cont
 }
 ```
 
+### Escape hatch
+
+If a third-party library forces layout properties at the root level, rename the selector to `_rootXyz` or `component_rootXyz` to bypass this check.
+
 ## Examples
 
 Examples of *correct* code for this rule:
+
+```css
+.component {
+  display: flex;
+  color: #333;
+
+  & > .child {
+    margin-left: 16px;
+    flex: 1;
+  }
+}
+```
+
+```css
+.component {
+  position: relative; /* allowed in root */
+  overflow: hidden;   /* allowed in root */
+}
+```
 
 ```css
 .good {
@@ -135,6 +154,22 @@ Examples of *correct* code for this rule:
 ```
 
 Examples of *incorrect* code for this rule:
+
+```css
+/* margin is a layout property — belongs in a nested selector */
+.component {
+  margin-left: 16px;
+}
+```
+
+```css
+.component {
+  & > .child {
+    /* color is not layout-related — should be in a root rule */
+    color: red;
+  }
+}
+```
 
 ```css
 .bad {

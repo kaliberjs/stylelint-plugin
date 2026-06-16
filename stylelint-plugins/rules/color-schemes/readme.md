@@ -1,34 +1,34 @@
-# Color scheme's
+# Color schemes
 
-Color schemes are defined by creating files in a `colorScheme` directory or `colorScheme.css` file (any path that contains `colorScheme`). A color scheme only allows for color properties to be defined, but in return it loosens some of the other policies.
+Color scheme files (files matching `colorScheme*.css` or any path containing `colorScheme`) are special-purpose CSS files that should only contain color-related properties. This rule enforces that separation, keeping color theming isolated from layout and structure.
 
-```css
-.color-scheme--red {
-  background-color: var(--color-red);
-  color: var(--color-white);
+By keeping color scheme files pure, you can swap or layer color themes without accidentally breaking layout, typography, or spacing.
 
-  & .color-scheme-icon {
-    color: var(--color-red-700);
-  }
+## Allowed properties
 
-  & .color-scheme-exclusion {
-    color: var(--color-red-300);
-  }
+Only these properties may appear in color scheme files:
 
-  & ::selection {
-    background-color: var(--color-red-300);
-  }
-}
-```
+- `color`
+- `background-color`
+- `border-color`
+- `stroke`
+- `fill`
+
+## Interactions with other rules
+
+When a file is recognized as a color scheme:
+
+- **layout-related-properties** — layout property restrictions in nested selectors are relaxed (the entire file is exempt)
+- **selector-policy** — double selectors and non-direct-child selectors are allowed
 
 ## Examples
 
 Examples of *correct* code for this rule:
 
-`colorScheme/abc.css`
+`colorScheme/abc.css`:
 ```css
-.good {
-  & .test {
+.component {
+  & .child {
     color: 0;
     background-color: 0;
     border-color: 0;
@@ -37,9 +37,10 @@ Examples of *correct* code for this rule:
   }
 }
 ```
-`colorScheme.css`
+
+`colorScheme.css`:
 ```css
-.good {
+.component {
   & ::selection {
     color: 0;
     background-color: 0;
@@ -50,14 +51,31 @@ Examples of *correct* code for this rule:
 }
 ```
 
+`colorSchemeDark.css`:
+```css
+.component {
+  color: #eee;
+  background-color: #1a1a1a;
+  border-color: #333;
+}
+```
+
 Examples of *incorrect* code for this rule:
 
-`colorScheme/abc.css`
+`colorScheme.css`:
 ```css
-.bad {
+.component {
+  color: #333;
+  padding: 16px; /* not a color-related property */
+}
+```
+
+`colorScheme/abc.css`:
+```css
+.component {
   padding: 0;
 
-  & .test {
+  & .child {
     margin: 0;
   }
 }

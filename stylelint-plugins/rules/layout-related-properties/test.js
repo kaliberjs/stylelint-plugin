@@ -47,25 +47,42 @@ test('layout-related-properties', {
       { code: '.good { position: relative; }' },
       { code: '.good { overflow: 0; }' },
       {
-        title: 'take @value into account',
+        title: 'treat var() as potentially intrinsic',
         code: `
-          @value x: 10px;
-          .good {
-            width: x !important;
-          }
+          :root { --x: 10px; }
+          .good { width: var(--x) !important; }
         `,
       },
       {
-        title: 'take custom properties into account',
+        title: 'treat calc() as potentially intrinsic',
+        code: `.good { width: calc(100px - 20px) !important; }`,
+      },
+      {
+        title: 'treat min() as potentially intrinsic',
+        code: `.good { width: min(100px, 50vw) !important; }`,
+      },
+      {
+        title: 'treat max() as potentially intrinsic',
+        code: `.good { width: max(300px, 50%) !important; }`,
+      },
+      {
+        title: 'treat clamp() as potentially intrinsic',
+        code: `.good { width: clamp(300px, 50%, 800px) !important; }`,
+      },
+      {
+        title: 'treat env() as potentially intrinsic',
+        code: `.good { width: env(safe-area-inset-top) !important; }`,
+      },
+      {
+        title: 'treat calc(var()) as potentially intrinsic',
         code: `
-          :root {
-            --x: 10px;
-          }
-
-          .good {
-            width: var(--x) !important;
-          }
+          :root { --container-md: 960px; }
+          .good { max-width: calc(var(--container-md) / 2) !important; }
         `,
+      },
+      {
+        title: 'treat var() in ratio hack padding as potentially valid',
+        code: `.good { height: 0; padding-top: var(--aspect-ratio); }`,
       },
       { code: '.good { height: 0; padding-bottom: 65.25%; }' },
       { code: '.good { height: 0; padding-top: 65.25%; }' },

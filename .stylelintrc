@@ -36,12 +36,7 @@
     ],
     "@stylistic/at-rule-name-case": "lower",
     "@stylistic/at-rule-name-space-after": "always-single-line",
-    "at-rule-no-unknown": [
-      true,
-      {
-        "ignoreAtRules": [ "value", "kaliber-scoped" ]
-      }
-    ],
+    "at-rule-no-unknown": true,
     "at-rule-empty-line-before": [
       "always", {
         "except": [
@@ -152,7 +147,6 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreSelectors": ":export",
         "ignoreProperties": [
           "container-type",
           "interpolate-size"
@@ -183,7 +177,7 @@
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        "ignorePseudoClasses": ["global", "export"]
+        "ignorePseudoClasses": ["global"]
       }
     ],
     "@stylistic/selector-pseudo-class-parentheses-space-inside": "never",

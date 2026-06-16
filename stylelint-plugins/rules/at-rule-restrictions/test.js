@@ -16,10 +16,6 @@ test('at-rule-restrictions', {
         code: `@import 'x';`,
         warnings: [messages['no import']]
       },
-      {
-        code: `@kaliber-scoped abc;`,
-        warnings: [messages['no kaliber-scoped']]
-      },
     ]
   }
 })

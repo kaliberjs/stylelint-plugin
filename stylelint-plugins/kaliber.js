@@ -1,10 +1,4 @@
 import stylelint from 'stylelint'
-import postcss from 'postcss'
-import postcssModulesValues from 'postcss-modules-values'
-import postcssCustomProperties from 'postcss-custom-properties'
-import postcssCustomMedia from 'postcss-custom-media'
-import postcssCustomSelectors from 'postcss-custom-selectors'
-import postcssCalc from 'postcss-calc'
 import { getNormalizedRoots } from './machinery/ast.js'
 import colorSchemes from './rules/color-schemes/index.js'
 import cssGlobal from './rules/css-global/index.js'
@@ -46,11 +40,12 @@ function toStyleLintPlugins(...rules) {
   const ruleInteraction = determineRuleInteraction(rules)
   const ruleConfiguration = convertToConfiguration(ruleInteraction)
 
-  return rules.map(({ ruleName, cssRequirements, create }) =>
+  return rules.map(({ ruleName, cssRequirements, create, meta }) =>
     createPlugin({
       ...(cssRequirements || {}),
       ruleName: `kaliber/${ruleName}`,
       plugin: create(ruleConfiguration[ruleName] || {}),
+      meta,
     })
   )
 }
@@ -107,15 +102,11 @@ function convertToConfiguration(ruleInteraction) {
 }
 
 function createPlugin({
-  ruleName, plugin,
+  ruleName, plugin, meta,
   normalizedCss = false,
-  resolvedCustomProperties = false,
-  resolvedCustomMedia = false,
-  resolvedCustomSelectors = false,
-  resolvedModuleValues = false,
-  resolvedCalc = false,
 }) {
   const stylelintPlugin = stylelint.createPlugin(ruleName, pluginWrapper)
+  if (meta) stylelintPlugin.meta = meta
 
   return stylelintPlugin
 
@@ -127,38 +118,8 @@ function createPlugin({
       const reported = {}
 
       const modifiedRoot = originalRoot.clone()
-      
-      // Build a list of PostCSS plugins to run
-      const plugins = []
-      
-      if (resolvedModuleValues) {
-        plugins.push(postcssModulesValues())
-      }
-      
-      if (resolvedCustomProperties) {
-        plugins.push(postcssCustomProperties({ preserve: false }))
-      }
-      if (resolvedCustomMedia) {
-        plugins.push(postcssCustomMedia({ preserve: false }))
-      }
-      if (resolvedCustomSelectors) {
-        plugins.push(postcssCustomSelectors({ preserve: false }))
-      }
-      
-      if (resolvedCalc) {
-        plugins.push(postcssCalc())
-      }
 
-      let processedRoot = modifiedRoot
-      
-      // Run the PostCSS plugins on the modified root
-      if (plugins.length > 0) {
-        const processor = postcss(plugins)
-        const processResult = await processor.process(modifiedRoot, { from: undefined })
-        processedRoot = processResult.root
-      }
-      
-      callPlugin(processedRoot)
+      callPlugin(modifiedRoot)
 
       /*
         This implementation splits it for each plugin. This might be a performance problem. The easy
@@ -167,7 +128,7 @@ function createPlugin({
         different rules manually (stylelint.rules['kaliber/xyz'](...)(splitRoot, result)).
       */
       if (normalizedCss)
-        Object.entries(getNormalizedRoots(processedRoot)).forEach(([mediaQuery, normalizedRoot]) => {
+        Object.entries(getNormalizedRoots(modifiedRoot)).forEach(([mediaQuery, normalizedRoot]) => {
           callPlugin(normalizedRoot)
         })
 

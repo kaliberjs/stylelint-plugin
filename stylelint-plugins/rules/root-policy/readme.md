@@ -1,23 +1,19 @@
 # Root policy
 
-Some combinations of properties does not make sense in a root selector, others can only be used in a certain combination.
-
-This rule helps to establish correct combinations.
+Enforces valid property combinations at the root level of CSS rules. Currently, this rule focuses on stacking context validity.
 
 - [Stacking context](#stacking-context)
 
 ## Stacking context
 
-While `z-index` is normally only allowed on child selectors, it is allowed in the root if used to create a 'stacking context'. A stacking context is created by setting a `z-index` and a `position: relative`. We choose this combination because it's 'safe' (it does not affect anything outside of the element).
+When `z-index` is used at the root level, it must create a proper non-invasive stacking context. This means:
 
-This rule triggers when you define a `z-index` in a root rule and requires you to these specific values:
+1. `z-index` must be `0` (to avoid interfering with surrounding layout)
+2. `position: relative` must also be present (required for `z-index` to take effect)
 
-```css
-.parent {
-  z-index: 0;
-  position: relative;
-}
-```
+We choose this combination because it's 'safe' (it does not affect anything outside of the element).
+
+If you need a non-zero `z-index`, set it in a nested selector within another root rule instead.
 
 ### Examples
 
@@ -30,11 +26,33 @@ Examples of *correct* code for this rule:
 }
 ```
 
+```css
+.component {
+  position: relative;
+  z-index: 0;
+}
+
+.someParent {
+  & > .component {
+    z-index: 5;
+  }
+}
+```
+
 Examples of *incorrect* code for this rule:
 
 ```css
+/* z-index without position: relative */
 .parent {
   z-index: 1;
+}
+```
+
+```css
+/* z-index is not 0 at root level */
+.component {
+  position: relative;
+  z-index: 5;
 }
 ```
 

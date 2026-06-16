@@ -4,6 +4,8 @@ import {
   getRootRules,
 } from '../../machinery/ast.js'
 import { checkRuleRelation } from '../../machinery/relations.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'root - z-index without position relative':
@@ -26,8 +28,13 @@ const rootCombos = {
   },
 }
 
-export default {
+export default defineRule({
   ruleName: 'root-policy',
+  meta: {
+    description: 'Root-level z-index must create a valid stacking context with position: relative',
+    url: docsUrl(import.meta.dirname),
+    fixable: true,
+  },
   ruleInteraction: {
     'layout-related-properties': {
       rootAllowDecl: decl => decl.prop === 'z-index',
@@ -35,28 +42,39 @@ export default {
   },
   cssRequirements: {
     normalizedCss: true,
-    // resolvedCustomProperties: true, TODO: add test case
-    // resolvedCustomMedia: true, TODO: add test case (probably only possible when we have added correct resolution for)
-    // resolvedCustomSelectors: true, TODO: add test case
-    // resolvedModuleValues: true, TODO: add test case
   },
   messages,
   create(config) {
     return ({ originalRoot, modifiedRoot, report, context }) => {
-      validStackingContextInRoot({ root: modifiedRoot, report })
+      validStackingContextInRoot({ root: modifiedRoot, originalRoot, report, context })
     }
   }
-}
+})
 
-function validStackingContextInRoot({ root, report }) {
+function validStackingContextInRoot({ root, originalRoot, report, context }) {
   withRootRules(root, rule => {
 
     const result = checkRootCombo(rule, rootCombos.validStackingContext)
 
-    result.forEach(({ result, prop, triggerDecl, rootDecl, value, expectedValue }) => {
+    result.forEach(({ result, prop, triggerDecl, invalidDecl, value, expectedValue }) => {
       if (prop === 'position') report(triggerDecl, messages['root - z-index without position relative'])
-      if (prop === 'z-index') report(triggerDecl, messages['root - z-index not 0'])
+      if (prop === 'z-index') {
+        if (context.fix) {
+          fixDeclInOriginal(originalRoot, invalidDecl, expectedValue)
+          return
+        }
+        report(triggerDecl, messages['root - z-index not 0'])
+      }
     })
+  })
+}
+
+function fixDeclInOriginal(originalRoot, clonedDecl, expectedValue) {
+  const { source } = clonedDecl
+  originalRoot.walkDecls(clonedDecl.prop, decl => {
+    if (decl.source?.start?.offset === source?.start?.offset) {
+      decl.value = expectedValue
+    }
   })
 }
 

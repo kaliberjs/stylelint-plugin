@@ -8,6 +8,8 @@ import {
 } from '../../machinery/ast.js'
 import { checkRuleRelation } from '../../machinery/relations.js'
 import { flexChildProps, gridChildProps, flexOrGridChildProps } from '../../machinery/css.js'
+import defineRule from '../../machinery/defineRule.js'
+import docsUrl from '../../machinery/docsUrl.js'
 
 export const messages = {
   'nested - missing stacking context in parent':
@@ -99,8 +101,12 @@ const childParentRelations = {
   },
 }
 
-export default {
+export default defineRule({
   ruleName: 'parent-child-policy',
+  meta: {
+    description: 'Child properties require matching parent context (flex children need display: flex, etc.)',
+    url: docsUrl(import.meta.dirname),
+  },
   ruleInteraction: {
     'layout-related-properties': {
       childAllowDecl: decl => declMatches(decl, [['pointer-events', 'auto'], ['position', 'static']])
@@ -108,10 +114,6 @@ export default {
   },
   cssRequirements: {
     normalizedCss: true,
-    // resolvedCustomProperties: true, TODO: add test case
-    // resolvedCustomMedia: true, TODO: add test case (probably only possible when we have added correct resolution for)
-    // resolvedCustomSelectors: true, TODO: add test case
-    // resolvedModuleValues: true, TODO: add test case
   },
   messages,
   create(config) {
@@ -126,7 +128,7 @@ export default {
       requireLayoutClassNameToBeDirectChild({ root: modifiedRoot, report })
     }
   }
-}
+})
 
 function requireStackingContextInParent({ root, report }) {
   withNestedRules(root, (rule, parent) => {

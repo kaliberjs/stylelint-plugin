@@ -1,18 +1,20 @@
-# Parent child policy
+# Parent-child policy
 
-CSS has a built-in concept of parent / child relations. One of the most prominent examples of this is `display: flex` (for the parent) with things like `flex-grow: 1` (for child). It does not make sense to use one of the child properties when the appropriate parent property is not present.
-
-This rule helps you to correctly create these parent / child relationships.
+Enforces that certain CSS properties in child selectors are only used when the parent (root rule) provides the required context. This prevents common bugs where, for example, `flex-grow` is used without the parent having `display: flex`.
 
 - [Stacking context](#stacking-context)
 - [Position absolute](#position-absolute)
 - [Escape stacking context with absolute children](#escape-stacking-context-with-absolute-children)
-- [Flex and Grid](#flex-and-grid)
+- [Flex and grid](#flex-and-grid)
 - [Pointer events](#pointer-events)
+- [Position static requires relative parent](#position-static-requires-relative-parent)
+- [layoutClassName must be a direct child](#layoutclassname-must-be-a-direct-child)
 
 ## Stacking context
 
-A `z-index` property applies to a 'stacking context', when you given an element a `z-index` the CSS engine will traverse its parents until it finds a stacking context and that will determine the meaning of the given `z-index`.
+When `z-index` is used in a nested selector, the containing root rule must create a stacking context with `position: relative` and `z-index: 0`.
+
+A `z-index` property applies to a 'stacking context', when you give an element a `z-index` the CSS engine will traverse its parents until it finds a stacking context and that will determine the meaning of the given `z-index`.
 
 This rule forces you to create a stacking context in the direct parent of the child. This helps you to structure your code correctly. It also prevents those annoying unexpected breaking changes where you change CSS in one part of the site and accidentally break another part of the site.
 
@@ -64,7 +66,7 @@ Examples of *incorrect* code for this rule:
 
 ## Position absolute
 
-When you given an element `position: absolute` the CSS engine will traverse its parents until it finds an element with `position: relative`.
+When you give an element `position: absolute` the CSS engine will traverse its parents until it finds an element with `position: relative`.
 
 This rule forces you set `position: relative` on the parent element in order to prevent the element from escaping a known context. It ensures we stay true to the black-box principle.
 
@@ -226,6 +228,8 @@ The `display: grid` and `display: flex` properties are similar, they are both se
 
 This rule helps you to keep that relation tight and prevent you from accidentally using one of the child properties in a parent.
 
+Flex child properties (`flex`, `flex-grow`, `flex-shrink`, `flex-basis`, `order`) can only be used when the containing root rule has `display: flex`. Grid child properties (`grid-column`, `grid-row`, `grid-area`, etc.) can only be used when the containing root rule has `display: grid` or `display: inline-grid`.
+
 Note that you can use `unset` in case an `@media` rule overrides the parent `display: flex` or `display: grid` property (see examples).
 
 ### Examples
@@ -291,7 +295,7 @@ Examples of *incorrect* code for this rule:
 
 Sometimes you do not want a parent to be affecting pointer events, but you do have a small section that should participate in pointer events. This most often is the case for overlays that contain buttons.
 
-This rule states that you can only change the `pointer-events` property of a child when it's parent has set `pointer-events: none`.
+`pointer-events: auto` in a child only makes sense when the parent has `pointer-events: none`. This pattern is used to disable interaction on a container while re-enabling it on specific children.
 
 ### Examples
 
@@ -320,12 +324,15 @@ Examples of *incorrect* code for this rule:
 ```css
 .parent {
   & > .child {
-    pointer-events: auto;
+    pointer-events: auto; /* parent doesn't disable pointer events */
   }
 }
 ```
 
-## Common refactorings
+## Position static requires relative parent
 
-...
+`position: static` in a child selector is only meaningful as a reset when the parent is `position: relative`.
 
+## layoutClassName must be a direct child
+
+Classes ending with the `Layout` suffix (layout class names) can only be targeted by a parent selector using the direct child combinator. Only layout-related properties may be used within layoutClassName rules.
