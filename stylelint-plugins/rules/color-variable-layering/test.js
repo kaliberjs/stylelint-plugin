@@ -61,6 +61,12 @@ test('color-variable-layering', {
         filename: 'features/buildingBlocks/Form.css',
         code: '.component { border-color: var(--color-error); color: var(--error-color); }'
       },
+      {
+        title: 'allow custom infra file paths via ignoreFiles option',
+        filename: 'features/myCustomInfra/helpers.css',
+        config: { ignoreFiles: ['myCustomInfra'] },
+        code: '.component { color: var(--color-blue-500); }'
+      },
     ],
     invalid: [
       {
@@ -101,6 +107,13 @@ test('color-variable-layering', {
           messages['use context token']('--color-blue-500', null),
           messages['use context token']('--color-blue-700', null),
         ]
+      },
+      {
+        title: 'provide custom suggestions via suggestions option',
+        filename: 'features/buildingBlocks/Hero.css',
+        config: { suggestions: { '--color-primary-custom': '--accent-color-custom' } },
+        code: '.component { color: var(--color-primary-custom); }',
+        warnings: [messages['use context token']('--color-primary-custom', '--accent-color-custom')]
       },
     ],
   },

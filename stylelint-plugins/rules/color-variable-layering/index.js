@@ -8,12 +8,6 @@ import docsUrl from '../../machinery/docsUrl.js'
  */
 const varReferencePattern = /var\(\s*(--[a-zA-Z0-9-]+)/g
 
-/**
- * Filenames to try when looking for context tokens inside cssGlobal/.
- * Some projects use singular, others plural.
- */
-const contextFileNames = ['style-context.css', 'style-contexts.css']
-
 export const messages = {
   'use context token': (token, suggestion) =>
     `Unexpected non-context color token "${token}"\n` +
@@ -39,7 +33,7 @@ function extractContextTokens(cssContent) {
   return tokens
 }
 
-/** Parsed token cache — keyed by cssGlobal path */
+/** Parsed token cache — keyed by combined cssGlobal path and filenames */
 const tokenCache = new Map()
 
 /**
@@ -54,24 +48,73 @@ export function seedTokenCache(tokens) {
 
 /**
  * Reads context tokens from the configured cssGlobal directory.
- * Tries both `style-context.css` and `style-contexts.css`.
+ * Tries the configured styleContextFiles.
  *
  * @param {string} cssGlobalPath
+ * @param {string[]} styleContextFiles
  * @returns {Set<string> | null}
  */
-function getContextTokens(cssGlobalPath) {
-  if (tokenCache.has(cssGlobalPath)) return tokenCache.get(cssGlobalPath)
+function getContextTokens(cssGlobalPath, styleContextFiles) {
+  const cacheKey = `${cssGlobalPath}::${styleContextFiles.join(',')}`
+  if (tokenCache.has(cacheKey)) return tokenCache.get(cacheKey)
 
-  for (const filename of contextFileNames) {
+  for (const filename of styleContextFiles) {
     const content = readCssGlobalFile(cssGlobalPath, filename)
     if (content) {
       const tokens = extractContextTokens(content)
-      tokenCache.set(cssGlobalPath, tokens)
+      tokenCache.set(cacheKey, tokens)
       return tokens
     }
   }
 
-  tokenCache.set(cssGlobalPath, null)
+  tokenCache.set(cacheKey, null)
+  return null
+}
+
+const defaultIgnorePatterns = [
+  /\/cssGlobal\//,
+  /style-context/,
+  /colorScheme.*\.css/
+]
+
+function isInfraFile(root, ignoreFiles = []) {
+  return matchesFile(root, filename => {
+    if (defaultIgnorePatterns.some(regex => regex.test(filename))) return true
+    return ignoreFiles.some(pattern => {
+      try {
+        if (pattern.startsWith('/') && pattern.endsWith('/')) {
+          return new RegExp(pattern.slice(1, -1)).test(filename)
+        }
+        return filename.includes(pattern)
+      } catch {
+        return false
+      }
+    })
+  })
+}
+
+function isColorToken(tokenName) {
+  return tokenName.startsWith('--color')
+}
+
+/**
+ * Suggest a likely context token replacement for common semantic/palette tokens.
+ */
+function suggestContextToken(tokenName, customSuggestions = {}) {
+  if (customSuggestions && typeof customSuggestions === 'object') {
+    if (customSuggestions[tokenName]) return customSuggestions[tokenName]
+    for (const [pattern, suggestion] of Object.entries(customSuggestions)) {
+      try {
+        if (new RegExp(pattern).test(tokenName)) return suggestion
+      } catch {
+        // ignore invalid regex patterns
+      }
+    }
+  }
+
+  if (/--color-primary/.test(tokenName)) return '--accent-color'
+  if (/--color-surface/.test(tokenName)) return '--background-color'
+  if (/--color-text/.test(tokenName)) return '--color'
   return null
 }
 
@@ -86,28 +129,32 @@ export default defineRule({
   messages,
   create() {
     return ({ originalRoot, report, options }) => {
+      const cssGlobal = options?.cssGlobal
+      const styleContextFiles = options?.styleContextFiles || ['style-context.css', 'style-contexts.css']
+      const ignoreFiles = options?.ignoreFiles || []
+      const suggestions = options?.suggestions || {}
+
       // Skip infrastructure files — they can use any layer
-      if (isInfraFile(originalRoot)) return
+      if (isInfraFile(originalRoot, ignoreFiles)) return
 
       // For test files (virtual paths), use the seeded test tokens
       if (tokenCache.has('__test__')) {
-        checkDeclarations(originalRoot, tokenCache.get('__test__'), report)
+        checkDeclarations(originalRoot, tokenCache.get('__test__'), report, suggestions)
         return
       }
 
       // Require cssGlobal option — the rule is a no-op without it
-      const cssGlobal = options?.cssGlobal
       if (!cssGlobal) return
 
-      const contextTokens = getContextTokens(cssGlobal)
+      const contextTokens = getContextTokens(cssGlobal, styleContextFiles)
       if (!contextTokens || contextTokens.size === 0) return
 
-      checkDeclarations(originalRoot, contextTokens, report)
+      checkDeclarations(originalRoot, contextTokens, report, suggestions)
     }
   }
 })
 
-function checkDeclarations(root, contextTokens, report) {
+function checkDeclarations(root, contextTokens, report, customSuggestions) {
   root.walkDecls(decl => {
     const { value, prop } = decl
 
@@ -123,31 +170,9 @@ function checkDeclarations(root, contextTokens, report) {
 
       // If this isn't a known context token, flag it
       if (!contextTokens.has(tokenName)) {
-        const suggestion = suggestContextToken(tokenName)
+        const suggestion = suggestContextToken(tokenName, customSuggestions)
         report(decl, messages['use context token'](tokenName, suggestion))
       }
     }
   })
-}
-
-function isInfraFile(root) {
-  return matchesFile(root, filename =>
-    filename.includes('/cssGlobal/') ||
-    filename.includes('style-contexts') ||
-    /colorScheme.*\.css/.test(filename)
-  )
-}
-
-function isColorToken(tokenName) {
-  return tokenName.startsWith('--color')
-}
-
-/**
- * Suggest a likely context token replacement for common semantic/palette tokens.
- */
-function suggestContextToken(tokenName) {
-  if (/--color-primary/.test(tokenName)) return '--accent-color'
-  if (/--color-surface/.test(tokenName)) return '--background-color'
-  if (/--color-text/.test(tokenName)) return '--color'
-  return null
 }

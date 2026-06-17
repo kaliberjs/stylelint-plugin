@@ -27,17 +27,28 @@ Using `var(--color-primary)` in a component **won't adapt** when the component s
 
 ## Configuration
 
-This rule requires a `cssGlobal` option pointing to your cssGlobal directory:
+This rule accepts an options object with the following properties:
+
+- `cssGlobal` (required): Relative path pointing to your `cssGlobal` directory.
+- `styleContextFiles` (optional): Array of filenames within `cssGlobal` to scan for context tokens. Defaults to `['style-context.css', 'style-contexts.css']`.
+- `ignoreFiles` (optional): Array of patterns (substrings or regex strings like `"/my-custom-theme/"`) specifying files to skip validation on.
+- `suggestions` (optional): Dictionary mapping semantic or palette tokens (keys) to recommended context replacements (values). Keys can be exact match strings or regex pattern strings.
+
+Example:
 
 ```json
 {
   "kaliber/color-variable-layering": [true, {
-    "cssGlobal": "src/cssGlobal"
+    "cssGlobal": "src/cssGlobal",
+    "styleContextFiles": ["style-contexts.css"],
+    "ignoreFiles": ["/custom-infra/", "legacyTheme"],
+    "suggestions": {
+      "--color-primary-brand": "--accent-color",
+      "^--color-gray-\\d+$": "--shade-color"
+    }
   }]
 }
 ```
-
-The path is resolved relative to the working directory where stylelint runs (typically the project root). The rule automatically looks for `style-context.css` or `style-contexts.css` inside the configured directory.
 
 Without `cssGlobal`, the rule is a no-op.
 
