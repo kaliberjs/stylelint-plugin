@@ -35,7 +35,7 @@ async function runTest(ruleName, test) {
     config: {
       plugins: [fileURLToPath(new URL('../kaliber.js', import.meta.url))],
       rules: {
-        [`kaliber/${ruleName}`]: [true]
+        [`kaliber/${ruleName}`]: test.config ? [true, test.config] : [true]
       }
     },
     fix: Boolean(test.output)
