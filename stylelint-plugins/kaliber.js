@@ -10,6 +10,9 @@ import rootPolicy from './rules/root-policy/index.js'
 import atRuleRestrictions from './rules/at-rule-restrictions/index.js'
 import indexRule from './rules/index/index.js'
 import reset from './rules/reset/index.js'
+import noHardcodedColors from './rules/no-hardcoded-colors/index.js'
+import colorVariableLayering from './rules/color-variable-layering/index.js'
+import mediaQueryConvention from './rules/media-query-convention/index.js'
 
 /*
   Motivation
@@ -33,6 +36,9 @@ const rules = toStyleLintPlugins(
   atRuleRestrictions,
   indexRule,
   reset,
+  noHardcodedColors,
+  colorVariableLayering,
+  mediaQueryConvention,
 )
 export default rules
 
@@ -132,7 +138,7 @@ function createPlugin({
         })
 
       function callPlugin(modifiedRoot) {
-        plugin({ modifiedRoot, originalRoot, report, context })
+        plugin({ modifiedRoot, originalRoot, report, context, options: secondaryOptionObject })
       }
 
       function report(node, message, index) {
