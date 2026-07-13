@@ -18,7 +18,8 @@ const familyAliases = new Map([
   ['line-height', 'font'],
 ])
 
-function familyKey(prop) {
+// Exported so a test can prove it against stylelint's authoritative shorthand graph — see test.js.
+export function familyKey(prop) {
   return familyAliases.get(prop) ?? prop.split('-')[0]
 }
 

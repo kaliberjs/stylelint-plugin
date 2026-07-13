@@ -1,5 +1,32 @@
-import { messages } from './index.js'
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
+import { createRequire } from 'node:module'
+import { pathToFileURL } from 'node:url'
+import { messages, familyKey } from './index.js'
 import { test } from '../../machinery/test.js'
+
+/*
+  Completeness guarantee. The surgical fix must never reorder a shorthand across one of its longhands,
+  which means familyKey MUST place every shorthand and its longhands in the same family. Rather than
+  trust the hand-written familyAliases map, we verify it against stylelint's own authoritative graph
+  (the exact data declaration-block-no-shorthand-property-overrides uses). If a stylelint upgrade adds
+  or changes a shorthand our map doesn't cover, this test fails loudly — that's how we know it's complete.
+*/
+describe('property-order: familyKey covers stylelint\'s whole shorthand graph', () => {
+  it('groups every shorthand with all its longhands (no cascade pair can be split)', async () => {
+    const require = createRequire(import.meta.url)
+    const ref = new URL('./reference/properties.mjs', pathToFileURL(require.resolve('stylelint')))
+    const { longhandSubPropertiesOfShorthandProperties: graph } = await import(ref)
+
+    const split = []
+    for (const [shorthand, longhands] of graph)
+      for (const longhand of longhands)
+        if (familyKey(shorthand) !== familyKey(longhand)) split.push(`${shorthand} / ${longhand}`)
+
+    assert.deepEqual(split, [],
+      'shorthand/longhand pairs land in different families — add them to familyAliases in index.js')
+  })
+})
 
 test('property-order', {
   'property-order': {
