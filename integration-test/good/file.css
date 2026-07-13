@@ -3,7 +3,7 @@
   width: 1px !important;
   padding: 0;
   padding-right: 0.1px;
-  padding-left: 0;
+  padding-left: 2px;
   font-family: serif;
   background: linear-gradient(to top, var(--color)/3, #000);
   background-size:
@@ -44,8 +44,8 @@
 
 .test1,
 .test2:not(.test)::before {
-  content: '\n';
   padding: 0;
+  content: '\n';
 }
 
 .testA,
