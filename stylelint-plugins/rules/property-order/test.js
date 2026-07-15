@@ -86,6 +86,26 @@ test('property-order', {
         title: 'valid - a same-family override is not reported by us (declaration-block-no-shorthand-property-overrides owns it)',
         code: `a {\n  padding-bottom: 0;\n  padding: 1rem;\n}`,
       },
+      {
+        title: 'fix - an own-line comment travels with its property',
+        code: `a {\n  display: block;\n  /* keep with z-index */\n  z-index: 0;\n}`,
+        output: `a {\n  /* keep with z-index */\n  z-index: 0;\n  display: block;\n}`,
+      },
+      {
+        title: 'fix - stylelint-disable-next-line stays glued to its target',
+        code: `a {\n  /* stylelint-disable-next-line kaliber/layout-related-properties */\n  max-width: 100%;\n  display: block;\n}`,
+        output: `a {\n  display: block;\n  /* stylelint-disable-next-line kaliber/layout-related-properties */\n  max-width: 100%;\n}`,
+      },
+      {
+        title: 'fix - multiple leading comments all travel together',
+        code: `a {\n  display: block;\n  /* one */\n  /* two */\n  z-index: 0;\n}`,
+        output: `a {\n  /* one */\n  /* two */\n  z-index: 0;\n  display: block;\n}`,
+      },
+      {
+        title: 'fix - a same-line trailing comment stays with its own property',
+        code: `a {\n  display: block; /* trailing */\n  z-index: 0;\n}`,
+        output: `a {\n  z-index: 0;\n  display: block; /* trailing */\n}`,
+      },
     ],
     invalid: [
       {

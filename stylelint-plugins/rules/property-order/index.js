@@ -18,7 +18,6 @@ const familyAliases = new Map([
   ['line-height', 'font'],
 ])
 
-// Exported so a test can prove it against stylelint's authoritative shorthand graph — see test.js.
 export function familyKey(prop) {
   return familyAliases.get(prop) ?? prop.split('-')[0]
 }
@@ -53,9 +52,6 @@ function reportOutOfOrder(root, report) {
       const index = orderIndex.get(node.prop)
       if (index === undefined) return
       const higher = seen.filter(s => s.index > index)
-      // Only flag inversions the fix will actually resolve, i.e. across families (safe to reorder).
-      // A same-family inversion is a shorthand/longhand override we deliberately leave in place — it's
-      // surfaced (as a yellow warning) by declaration-block-no-shorthand-property-overrides instead.
       const sameFamily = higher.some(s => familyKey(s.prop) === familyKey(node.prop))
       const crossFamily = higher.find(s => familyKey(s.prop) !== familyKey(node.prop))
       if (crossFamily && !sameFamily) report(node, messages['wrong order'](node.prop, crossFamily.prop))
@@ -93,9 +89,47 @@ function reorderKnownDecls(root) {
       )
       .map(x => x.d)
 
+    // Comments attached to a decl must travel with it: own-line comment(s) directly above (e.g. a
+    // `stylelint-disable-next-line` MUST stay glued to its target), and a same-line trailing comment.
+    // Capture ownership from the ORIGINAL positions before moving anything.
+    const attached = new Map(known.map(d => [d, { lead: leadingComments(d), trail: trailingComments(d) }]))
+
+    // Move content into the sorted slots (preserves indentation/blank-lines/raws of each slot)…
     const contents = sorted.map(captureContent)
     known.forEach((slot, i) => applyContent(slot, contents[i]))
+
+    // …then relocate each moved decl's comments around the slot that now holds its content.
+    known.forEach((slot, i) => {
+      const source = sorted[i] // the decl whose content now lives in `slot`
+      if (source === slot) return // content didn't move → its comments are already in place
+      const { lead, trail } = attached.get(source)
+      for (const comment of lead) { comment.remove(); slot.before(comment) }
+      let anchor = slot
+      for (const comment of trail) { comment.remove(); anchor.after(comment); anchor = comment }
+    })
   })
+}
+
+// Own-line comments above a decl (newline in `before`) belong to it. A same-line trailing comment
+// (no newline) belongs to the decl before it, so leadingComments stops at one.
+function leadingComments(decl) {
+  const comments = []
+  let prev = decl.prev()
+  while (prev && prev.type === 'comment' && (prev.raws.before || '').includes('\n')) {
+    comments.unshift(prev)
+    prev = prev.prev()
+  }
+  return comments
+}
+
+function trailingComments(decl) {
+  const comments = []
+  let next = decl.next()
+  while (next && next.type === 'comment' && !(next.raws.before || '').includes('\n')) {
+    comments.push(next)
+    next = next.next()
+  }
+  return comments
 }
 
 function captureContent(decl) {

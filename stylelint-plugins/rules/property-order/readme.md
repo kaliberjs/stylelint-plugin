@@ -13,6 +13,9 @@ This rule is **fixable**: run stylelint with `--fix` to reorder declarations aut
 - **Unknown props are left alone** — custom properties (`--x`), vendor-prefixed props, and anything not
   in the list are never reported, and on fix they keep their original slot (known props are sorted
   around them).
+- **Comments travel with their property.** An own-line comment directly above a declaration (including
+  a `stylelint-disable-next-line`, which must stay glued to its target) and a same-line trailing comment
+  both move with that declaration when it is reordered.
 - **No blank lines between groups.** Unlike the upstream config, this rule never inserts empty lines;
   declarations stay compact. Empty-line behaviour is governed by `declaration-empty-line-before`.
 - **Shorthand/longhand overrides are never reordered.** Hoisting a shorthand above a longhand it
