@@ -11,6 +11,7 @@
     "kaliber/index": true,
     "kaliber/layout-related-properties": true,
     "kaliber/naming-policy": true,
+    "kaliber/property-order": true,
     "kaliber/at-rule-restrictions": true,
     "kaliber/parent-child-policy": true,
     "kaliber/reset": true,
@@ -88,6 +89,7 @@
         ]
       }
     ],
+    "declaration-block-no-redundant-longhand-properties": true,
     "declaration-block-no-shorthand-property-overrides": true,
     "@stylistic/declaration-block-semicolon-newline-after": "always-multi-line",
     "@stylistic/declaration-block-semicolon-space-after": "always-single-line",
