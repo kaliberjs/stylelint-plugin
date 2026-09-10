@@ -22,6 +22,7 @@ const layoutRelatedProps = [ // only allowed in child
   'z-index',
   'width', 'height',
   ['position', 'absolute'], ['position', 'fixed'],
+  'position-anchor',
   'top', 'right', 'bottom', 'left', 'inset',
   'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 
   'margin-inline', 'margin-inline-start', 'margin-inline-end',

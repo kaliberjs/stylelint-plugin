@@ -142,12 +142,18 @@ function requireStackingContextInParent({ root, report }) {
 
 function absoluteHasRelativeParent({ root, report }) {
   withNestedRules(root, (rule, parent) => {
+    if (usesAnchorPositioning(rule)) return
+
     const result = checkChildParentRelation(rule, childParentRelations.absoluteHasRelativeParent)
 
     result.forEach(({ result, prop, triggerDecl, rootDecl, value, expectedValue }) => {
       report(triggerDecl, messages['nested - absolute has relative parent'])
     })
   })
+}
+
+function usesAnchorPositioning(rule) {
+  return findDecls(rule, ['position-anchor']).length > 0
 }
 
 function requireDisplayFlexInParent({ root, report }) {
