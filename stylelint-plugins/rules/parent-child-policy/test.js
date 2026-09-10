@@ -151,6 +151,22 @@ test('parent-child-policy', {
         `,
       },
       {
+        title: 'allow position: absolute with anchor positioning (no position: relative needed)',
+        code: `
+          .component {
+            anchor-name: --author-anchor;
+            anchor-scope: --author-anchor;
+
+            & > .popup {
+              position: absolute;
+              position-anchor: --author-anchor;
+              top: anchor(bottom);
+              left: anchor(left);
+            }
+          }
+        `,
+      },
+      {
         title: 'accept var() in parent position for absolute children',
         code: `
           .good {
